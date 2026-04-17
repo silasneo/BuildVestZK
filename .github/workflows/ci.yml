@@ -7,8 +7,11 @@ on:
   pull_request:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   backend:
@@ -65,12 +68,7 @@ jobs:
         run: npm ci
 
       - name: Lint (if configured)
-        run: |
-          if node -e "const p=require('./package.json'); process.exit(p.scripts?.lint ? 0 : 1)"; then
-            npm run lint
-          else
-            echo "No lint script found, skipping lint."
-          fi
+        run: npm run lint --if-present
 
       - name: Build
         run: npm run build
