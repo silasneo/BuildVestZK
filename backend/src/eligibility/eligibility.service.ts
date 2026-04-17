@@ -42,7 +42,10 @@ export class EligibilityService {
     };
   }
 
-  async evaluate(userId: number, monthBalances: number[]): Promise<{
+  async evaluate(
+    userId: number,
+    monthBalances: number[],
+  ): Promise<{
     qualified: boolean;
     tier: string;
     proofHash?: string;
@@ -87,7 +90,10 @@ export class EligibilityService {
       };
     }
 
-    const { proofHash } = await this.proofService.generateAndVerify(monthBalances, 1000);
+    const { proofHash } = await this.proofService.generateAndVerify(
+      monthBalances,
+      1000,
+    );
     const anchored = await this.stellarService.anchorProof(userId, proofHash);
 
     await this.prisma.$transaction([

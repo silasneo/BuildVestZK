@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -13,8 +17,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signup(dto: SignupDto): Promise<{ accessToken: string; user: { id: number; email: string; tier: string } }> {
-    const existingUser = await this.prisma.user.findUnique({ where: { email: dto.email } });
+  async signup(dto: SignupDto): Promise<{
+    accessToken: string;
+    user: { id: number; email: string; tier: string };
+  }> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
 
     if (existingUser) {
       throw new ConflictException('Email already exists');
@@ -35,8 +44,13 @@ export class AuthService {
     };
   }
 
-  async login(dto: LoginDto): Promise<{ accessToken: string; user: { id: number; email: string; tier: string } }> {
-    const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
+  async login(dto: LoginDto): Promise<{
+    accessToken: string;
+    user: { id: number; email: string; tier: string };
+  }> {
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
