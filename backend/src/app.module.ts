@@ -5,11 +5,6 @@ import { EligibilityModule } from './eligibility/eligibility.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    PrismaModule,
-    AuthModule,
-    EligibilityModule,
-  ],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, EligibilityModule],
 })
 export class AppModule {}
