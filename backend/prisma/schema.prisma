@@ -1,0 +1,34 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             Int                 @id @default(autoincrement())
+  email          String              @unique
+  hashedPassword String
+  tier           String              @default("RETAIL") // "RETAIL" or "PRIME"
+  createdAt      DateTime            @default(now())
+  eligibility    EligibilityProfile?
+}
+
+model EligibilityProfile {
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @unique
+  user               User     @relation(fields: [userId], references: [id])
+  status             String   @default("SUBMITTED") // SUBMITTED, APPROVED, REJECTED
+  monthBalances      String // JSON string: "[1200, 1500, 900]"
+  qualified          Boolean  @default(false)
+  proofHash          String?
+  stellarTxHash      String?
+  sorobanTxHash      String?
+  stellarAccountId   String?
+  verificationMethod String? // "mock", "offchain", "onchain"
+  evaluatedAt        DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
