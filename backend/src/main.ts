@@ -6,7 +6,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: [
+      'http://localhost:5173',
+      process.env.FRONTEND_URL,
+      /\.vercel\.app$/,
+    ].filter(Boolean),
+    credentials: true,
   });
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,7 +20,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT ?? 3000);
 }
 
 void bootstrap();

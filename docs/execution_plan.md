@@ -396,11 +396,37 @@ fn main(
 - Public input: threshold (`1000`)
 - Flow: parse/collect balances off-chain → generate proof in backend → verify (Soroban on-chain preferred, off-chain fallback) → anchor proof hash with ManageData
 
+## Architecture clarification — where Noir runs
+
+- The Noir circuit runs **locally inside the Node.js backend** using:
+  - `@noir-lang/noir_js`
+  - `@noir-lang/backend_barretenberg`
+- Private inputs (actual bank balances) stay in backend memory/process context and **never leave the backend server**.
+- The backend only sends proof bytes + public threshold value to Soroban for verification.
+
 # 8. Stellar Integration
 
 - **ManageData:** write `bv_prime_{userId} = proofHash` to testnet account data
 - **Soroban on-chain verification:** deploy `ultrahonk_soroban_contract`, submit proof for verification
 - If on-chain verifier unavailable, use off-chain verification and still anchor hash on testnet
+
+## Architecture clarification — on-chain verification flow
+
+1. Backend generates proof locally from private balances.
+2. Backend submits proof + public threshold to deployed UltraHonk verifier contract.
+3. Soroban verifier contract runs verification **on-chain** and returns `true/false`.
+4. Backend reads the Soroban transaction response and then:
+   - stores `{ sorobanTxHash, proofHash }` in local SQLite (`EligibilityProfile`)
+   - writes a Stellar `ManageData` entry as human-readable proof record
+
+## Stellar testnet credentials (no external accounts needed)
+
+- Keypair generation: local `Keypair.random()` (no signup)
+- Funding: one Friendbot HTTP call (free 10,000 XLM)
+- Soroban RPC: `https://soroban-testnet.stellar.org` (no API key)
+- Horizon API: `https://horizon-testnet.stellar.org` (no API key)
+- Wallet app: not required; backend directly holds the secret key
+- External tool needed: Stellar CLI (for verifier contract deployment)
 
 Setup checklist:
 1. Create Stellar testnet keypair
@@ -600,6 +626,8 @@ STELLAR_SECRET_KEY=""
 STELLAR_HORIZON_URL="https://horizon-testnet.stellar.org"
 SOROBAN_RPC_URL="https://soroban-testnet.stellar.org"
 SOROBAN_VERIFIER_CONTRACT_ID=""
+FRONTEND_URL="" # e.g. https://buildvestzk.vercel.app
+PORT=3000
 ```
 
 # 15. Updated Demo Script
