@@ -1,5 +1,19 @@
 # BuildVestZK Backend API Testing Guide
 
+## Quick-Start (copy/paste)
+
+```bash
+# Local
+curl -X POST http://localhost:3000/auth/signup -H "Content-Type: application/json" -d '{"email":"test@test.com","password":"Test1234"}'
+
+# Railway (deployed)
+curl -X POST https://buildvestzk.up.railway.app/auth/signup -H "Content-Type: application/json" -d '{"email":"test@test.com","password":"Test1234"}'
+```
+
+> Save the `accessToken` from the response, then use it as `Authorization: Bearer <token>` for protected endpoints.
+
+---
+
 ## 1) Base URLs
 
 - **Local:** `http://localhost:3000`
