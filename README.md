@@ -1,46 +1,81 @@
 # BuildVestZK
 
-BuildVestZK is a draft project focused on enabling on-chain privacy for qualified **Prime** investors on BuildVest using zero-knowledge (ZK) techniques.
+BuildVestZK is a hackathon prototype for privacy-preserving PRIME investor qualification using a NestJS backend, a React frontend, and a phased ZK + Stellar integration roadmap.
 
-## Status
+## Current Status (Hackathon)
 
-🚧 Repository initialized with draft documentation.  
-Core architecture, smart contracts, and proving circuits are to be defined in upcoming iterations.
+- ✅ Backend foundation complete and tested locally (auth, eligibility engine, mock proof flow)
+- ✅ Deployment configuration completed (Railway + Vercel)
+- ✅ Backend deployed: `https://buildvestzk.up.railway.app`
+- 🔄 Frontend scaffold in progress (Vite + React + Tailwind pages)
+- ✅ Frontend deployed: `https://build-vest-zk.vercel.app/`
 
-## Vision
+## Tech Stack
 
-- Preserve investor privacy while proving qualification/compliance.
-- Support transparent on-chain verification without exposing sensitive personal data.
-- Provide a modular ZK stack that can evolve with product and regulatory requirements.
+- **Backend:** NestJS + TypeScript + Prisma + SQLite + JWT
+- **Frontend:** React + Vite + Tailwind
+- **ZK (next phase):** Noir + Barretenberg
+- **Blockchain:** Stellar testnet + Soroban (planned verifier contract)
 
-## Planned Components
+## Local Development Quick Start
 
-- **Smart contracts** for verification and access control.
-- **ZK circuits/proofs** for qualification attestations.
-- **Off-chain services** for proof generation and credential handling.
-- **Integration layer** for BuildVest product workflows.
+### Backend
 
-## Getting Started (Draft)
+```bash
+cd backend
+npm install
+npm run start:dev
+```
 
-This repository is currently in early setup mode.
+Backend runs at `http://localhost:3000`.
 
-1. Clone the repository.
-2. Define project structure (`contracts/`, `circuits/`, `backend/`, `docs/`) as implementation begins.
-3. Add build/test tooling once the first code modules are introduced.
+### Frontend
 
-## Development Notes
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- Keep privacy-by-design principles as the default.
-- Favor explicit threat modeling for all new components.
-- Add tests alongside each new module as it is introduced.
+Frontend runs at `http://localhost:5173`.
 
-## Roadmap (Draft)
+## API Endpoints (No `/api/v1` Prefix)
 
-- [ ] Finalize technical architecture and stack choices.
-- [ ] Implement initial proof-of-concept verification flow.
-- [ ] Add CI checks and baseline test suite.
-- [ ] Publish developer setup instructions.
+- `POST /auth/signup`
+- `POST /auth/login`
+- `GET /eligibility/status`
+- `POST /eligibility/evaluate`
 
-## License
+All backend routes are root-level (for example: `https://buildvestzk.up.railway.app/auth/signup`).
 
-TBD.
+## Documentation
+
+- Execution plan: [`docs/execution_plan.md`](docs/execution_plan.md)
+- Backend API testing guide: [`docs/backend_testing.md`](docs/backend_testing.md)
+- Deployment guide: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
+
+## Verified Local API Results
+
+- ✅ `POST /auth/signup` returns `accessToken` + user with `tier=RETAIL`
+- ✅ `POST /auth/login` works
+- ✅ `GET /eligibility/status` returns `null` before evaluation and profile after evaluation
+- ✅ `POST /eligibility/evaluate` with `[1500, 2300, 1800]` returns `qualified=true`, `tier=PRIME`
+- ✅ `POST /eligibility/evaluate` with `[1200, 800, 1500]` returns `qualified=false`, `tier=RETAIL`
+- ✅ Login after upgrade confirms persisted `tier=PRIME`
+
+## Stellar Testnet Status
+
+- ✅ Testnet keypair generated locally via `Keypair.random()`
+- ✅ Testnet account funded via Friendbot (10,000 XLM)
+- ⏳ Stellar CLI not yet installed (required for Soroban contract deployment phase)
+
+## Remaining Steps
+
+1. 🔜 Build Noir ZK circuit and real proof flow
+2. 🔜 Add Stellar ManageData anchoring + Soroban verifier integration
+3. 🔜 Add reset/demo script for repeatable judging demos
+4. 🔜 Final deploy pass + demo polish
+
+## Important Note
+
+- Railway currently uses SQLite on an ephemeral filesystem, so demo data resets on redeploy.

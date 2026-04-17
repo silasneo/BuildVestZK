@@ -1,3 +1,17 @@
+# 0. Current Implementation Status (Hackathon Snapshot)
+
+- [x] ✅ Backend setup complete (PR #3 merged: NestJS + Prisma + SQLite + JWT + TierRulesEngine + mock proof)
+- [x] ✅ Backend API testing complete (local test cases passing)
+- [x] ✅ Deployment configs complete (Railway + Vercel configured)
+- [x] ✅ Stellar testnet setup complete for account bootstrap (keypair generated + funded via Friendbot)
+- [ ] 🔄 Frontend scaffold in progress (Vite + React + Tailwind + core pages)
+- [ ] 🔜 Noir ZK circuit implementation (next)
+- [ ] 🔜 Stellar on-chain integration (ManageData + Soroban verification) after ZK circuit
+- [ ] 🔜 Reset/demo script after integration
+- [ ] 🔜 Final polish + deploy verification (last step)
+
+> Note: Stellar CLI installation is still pending and required before Soroban contract deployment.
+
 # 1. Recommended Hackathon Strategy
 
 - Start a **fresh repo** for `BuildVestZK`; do not import code from main BuildVest MVP repos.
