@@ -53,11 +53,11 @@ function Landing() {
           </Link>
 
           <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
-            {navLinks.map((item) => (
+          /*   {navLinks.map((item) => (
               <a key={item} href="#" className="transition hover:text-bv-blue">
                 {item}
               </a>
-            ))}
+            ))} */
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
