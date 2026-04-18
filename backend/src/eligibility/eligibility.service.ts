@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ProofService } from '../proof/proof.service';
 import { StellarService } from '../proof/stellar.service';
+import { ZkService } from '../zk/zk.service';
 import { TierRulesEngine } from './tier-rules.engine';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class EligibilityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly tierRulesEngine: TierRulesEngine,
-    private readonly proofService: ProofService,
+    private readonly zkService: ZkService,
     private readonly stellarService: StellarService,
   ) {}
 
@@ -90,10 +90,8 @@ export class EligibilityService {
       };
     }
 
-    const { proofHash } = await this.proofService.generateAndVerify(
-      monthBalances,
-      1000,
-    );
+    const { proofHash, verificationMethod } =
+      await this.zkService.generateAndVerify(monthBalances, 1000);
     const anchored = await this.stellarService.anchorProof(userId, proofHash);
 
     await this.prisma.$transaction([
@@ -111,7 +109,7 @@ export class EligibilityService {
           stellarTxHash: anchored?.txHash ?? null,
           sorobanTxHash: null,
           stellarAccountId: anchored?.accountId ?? null,
-          verificationMethod: 'mock',
+          verificationMethod,
           evaluatedAt: new Date(),
         },
         create: {
@@ -123,7 +121,7 @@ export class EligibilityService {
           stellarTxHash: anchored?.txHash ?? null,
           sorobanTxHash: null,
           stellarAccountId: anchored?.accountId ?? null,
-          verificationMethod: 'mock',
+          verificationMethod,
           evaluatedAt: new Date(),
         },
       }),
@@ -135,7 +133,7 @@ export class EligibilityService {
       proofHash,
       stellarTxHash: anchored?.txHash ?? null,
       sorobanTxHash: null,
-      verificationMethod: 'mock',
+      verificationMethod,
     };
   }
 }

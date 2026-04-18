@@ -5,7 +5,7 @@
 - [x] ✅ Deployment configs complete (Railway + Vercel configured)
 - [x] ✅ Stellar testnet setup complete for account bootstrap (keypair generated + funded via Friendbot)
 - [ ] 🔄 Frontend scaffold in progress (Vite + React + Tailwind + core pages)
-- [ ] 🔜 Noir ZK circuit implementation (next)
+- [x] ✅ Noir ZK circuit implementation complete (`circuits/balance_check` + backend Noir prover integration with mock fallback)
 - [ ] 🔜 Stellar on-chain integration (ManageData + Soroban verification) after ZK circuit
 - [ ] 🔜 Reset/demo script after integration
 - [ ] 🔜 Final polish + deploy verification (last step)

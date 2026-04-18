@@ -3,7 +3,7 @@ import { createHash } from 'crypto';
 
 @Injectable()
 export class ProofService {
-  async generateAndVerify(
+  generateMockProof(
     monthBalances: number[],
     threshold: number,
   ): Promise<{ proofHash: string; verified: boolean }> {
@@ -18,6 +18,13 @@ export class ProofService {
 
     const proofHash = createHash('sha256').update(proofPayload).digest('hex');
 
-    return { proofHash, verified: true };
+    return Promise.resolve({ proofHash, verified: true });
+  }
+
+  generateAndVerify(
+    monthBalances: number[],
+    threshold: number,
+  ): Promise<{ proofHash: string; verified: boolean }> {
+    return this.generateMockProof(monthBalances, threshold);
   }
 }
