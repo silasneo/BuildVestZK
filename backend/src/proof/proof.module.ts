@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ProofService } from './proof.service';
-import { StellarService } from './stellar.service';
 
 @Module({
-  providers: [ProofService, StellarService],
-  exports: [ProofService, StellarService],
+  providers: [ProofService],
+  exports: [ProofService],
 })
 export class ProofModule {}

@@ -25,6 +25,7 @@ model EligibilityProfile {
   qualified          Boolean  @default(false)
   proofHash          String?
   stellarTxHash      String?
+  stellarLedger      Int?
   sorobanTxHash      String?
   stellarAccountId   String?
   verificationMethod String? // "mock", "offchain", "onchain"
