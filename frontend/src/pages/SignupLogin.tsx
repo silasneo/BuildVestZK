@@ -14,8 +14,12 @@ interface AuthResponse {
   };
 }
 
-function SignupLogin() {
-  const [mode, setMode] = useState<Mode>('signup');
+interface SignupLoginProps {
+  initialMode?: Mode;
+}
+
+function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
