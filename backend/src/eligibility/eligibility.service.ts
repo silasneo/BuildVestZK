@@ -1,16 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StellarService } from '../stellar/stellar.service';
+import { VerificationService } from '../verification/verification.service';
 import { ZkService } from '../zk/zk.service';
 import { TierRulesEngine } from './tier-rules.engine';
 
 @Injectable()
 export class EligibilityService {
+  private readonly logger = new Logger(EligibilityService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly tierRulesEngine: TierRulesEngine,
     private readonly zkService: ZkService,
     private readonly stellarService: StellarService,
+    private readonly verificationService: VerificationService,
   ) {}
 
   async getStatus(userId: number): Promise<{
@@ -57,6 +61,7 @@ export class EligibilityService {
     stellarExplorerUrl?: string | null;
     horizonUrl?: string | null;
     sorobanTxHash?: string | null;
+    sorobanExplorerUrl?: string | null;
     verificationMethod?: string;
   }> {
     const qualified = this.tierRulesEngine.evaluate(monthBalances);
@@ -97,7 +102,7 @@ export class EligibilityService {
       };
     }
 
-    const { proofHash, verificationMethod } =
+    const { proofHash, verificationMethod: zkMethod } =
       await this.zkService.generateAndVerify(monthBalances, 1000);
     const anchored = await this.stellarService.submitProofHash(
       proofHash,
@@ -106,6 +111,14 @@ export class EligibilityService {
     const stellarTxHash = anchored?.txHash ?? null;
     const stellarLedger = anchored?.ledger ?? null;
     const network = this.getStellarNetwork();
+
+    // Run verification toggle (local vs on-chain)
+    const verification = await this.verificationService.verify(proofHash, [
+      String(1000),
+    ]);
+    const verificationMethod = verification.verificationMethod;
+    const sorobanTxHash = verification.sorobanTxHash ?? null;
+    const sorobanExplorerUrl = verification.sorobanExplorerUrl ?? null;
 
     await this.prisma.$transaction([
       this.prisma.user.update({
@@ -121,7 +134,7 @@ export class EligibilityService {
           proofHash,
           stellarTxHash,
           stellarLedger,
-          sorobanTxHash: null,
+          sorobanTxHash,
           stellarAccountId: null,
           verificationMethod,
           evaluatedAt: new Date(),
@@ -134,7 +147,7 @@ export class EligibilityService {
           proofHash,
           stellarTxHash,
           stellarLedger,
-          sorobanTxHash: null,
+          sorobanTxHash,
           stellarAccountId: null,
           verificationMethod,
           evaluatedAt: new Date(),
@@ -154,7 +167,8 @@ export class EligibilityService {
       horizonUrl: stellarTxHash
         ? `${this.getHorizonTransactionBaseUrl(network)}${stellarTxHash}`
         : null,
-      sorobanTxHash: null,
+      sorobanTxHash,
+      sorobanExplorerUrl,
       verificationMethod,
     };
   }

@@ -34,9 +34,13 @@ STELLAR_SECRET_KEY=<your-testnet-secret-key>
 STELLAR_HORIZON_URL=https://horizon-testnet.stellar.org
 SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
 SOROBAN_VERIFIER_CONTRACT_ID=<after-contract-deployment>
+VERIFICATION_MODE=local
 FRONTEND_URL=https://your-app.vercel.app
 PORT=3000
 ```
+
+> Set `VERIFICATION_MODE=onchain` after deploying the Soroban verifier contract
+> (see *Stellar Testnet Setup* below).
 
 ### Important: SQLite on Railway
 SQLite works but **data resets on each redeploy** (ephemeral filesystem). For the hackathon demo this is acceptable — use the reset script to re-seed after deploy. For persistence, swap to Railway's free Postgres addon:
@@ -72,6 +76,9 @@ stellar network add testnet \
   --network-passphrase "Test SDF Network ; September 2015"
 
 # 5. Deploy UltraHonk verifier contract
+# Option A: Use the provided deploy script
+./scripts/deploy-verifier.sh
+# Option B: Manual deployment
 git clone https://github.com/tupui/ultrahonk_soroban_contract
 cd ultrahonk_soroban_contract
 stellar contract build
@@ -80,6 +87,7 @@ stellar contract deploy \
   --source YOUR_SECRET_KEY \
   --network testnet
 # Save the returned contract ID → SOROBAN_VERIFIER_CONTRACT_ID
+# Then set VERIFICATION_MODE=onchain in your .env
 ```
 
 ## Demo URLs (after deployment)
