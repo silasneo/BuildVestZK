@@ -5,7 +5,7 @@ use soroban_sdk::{contract, contractimpl, symbol_short, BytesN, Env};
 #[cfg(test)]
 mod test;
 
-const VERIFIED_KEY: &str = "verified";
+//const VERIFIED_KEY: &str = "verified";
 
 #[contract]
 pub struct VerifierContract;
@@ -26,7 +26,7 @@ impl VerifierContract {
         // Store the proof hash as verified
         env.storage()
             .persistent()
-            .set(&(symbol_short!(VERIFIED_KEY), proof_hash.clone()), &true);
+            .set(&(symbol_short!("verified"), proof_hash.clone()), &true);
 
         // Emit verification event
         env.events()
@@ -39,7 +39,7 @@ impl VerifierContract {
     pub fn is_verified(env: Env, proof_hash: BytesN<32>) -> bool {
         env.storage()
             .persistent()
-            .get(&(symbol_short!(VERIFIED_KEY), proof_hash))
+            .get(&(symbol_short!("verified"), proof_hash))
             .unwrap_or(false)
     }
 }
