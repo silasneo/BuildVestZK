@@ -33,14 +33,13 @@ JWT_SECRET=<generate-a-random-string>
 STELLAR_SECRET_KEY=<your-testnet-secret-key>
 STELLAR_HORIZON_URL=https://horizon-testnet.stellar.org
 SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
-SOROBAN_VERIFIER_CONTRACT_ID=<after-contract-deployment>
-VERIFICATION_MODE=local
+SOROBAN_VERIFIER_CONTRACT_ID=CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU
+VERIFICATION_MODE=onchain
 FRONTEND_URL=https://your-app.vercel.app
 PORT=3000
 ```
 
-> Set `VERIFICATION_MODE=onchain` after deploying the Soroban verifier contract
-> (see *Stellar Testnet Setup* below).
+> Soroban verifier contract is already deployed to testnet and wired for on-chain verification.
 
 ### Important: SQLite on Railway
 SQLite works but **data resets on each redeploy** (ephemeral filesystem). For the hackathon demo this is acceptable — use the reset script to re-seed after deploy. For persistence, swap to Railway's free Postgres addon:
@@ -98,14 +97,15 @@ stellar contract deploy \
 | API | `https://buildvestzk-backend.up.railway.app` |
 | Stellar proof | `https://horizon-testnet.stellar.org/transactions/{txHash}` |
 | Soroban verification | `https://stellar.expert/explorer/testnet/tx/{sorobanTxHash}` |
+| Deployed verifier contract | `https://lab.stellar.org/r/testnet/contract/CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU` |
 
 ## Post-Deploy Checklist
-- [ ] Frontend loads at Vercel URL
-- [ ] `POST /auth/signup` works against Railway backend
-- [ ] CORS allows Vercel → Railway requests
-- [ ] Signup → evaluate → proof → Stellar tx hash returned
-- [ ] Stellar tx visible on Horizon testnet explorer
-- [ ] Reset script works: `npx ts-node scripts/reset-and-demo.ts pass`
+- [x] Frontend loads at Vercel URL
+- [x] `POST /auth/signup` works against Railway backend
+- [x] CORS allows Vercel → Railway requests
+- [x] Signup → evaluate → proof → Stellar tx hash returned
+- [x] Stellar tx visible on Horizon testnet explorer
+- [x] Reset script works: `cd backend && npm run demo:full`
 
 ## Notes
 - The user mentioned they have already connected Vercel and created a project for this repo
