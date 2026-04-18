@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { StellarService } from '../proof/stellar.service';
+import { StellarService } from '../stellar/stellar.service';
 import { ZkService } from '../zk/zk.service';
 import { TierRulesEngine } from './tier-rules.engine';
 
@@ -19,6 +19,7 @@ export class EligibilityService {
     qualified: boolean;
     proofHash: string | null;
     stellarTxHash: string | null;
+    stellarLedger: number | null;
     sorobanTxHash: string | null;
     verificationMethod: string | null;
   } | null> {
@@ -37,6 +38,7 @@ export class EligibilityService {
       qualified: user.eligibility.qualified,
       proofHash: user.eligibility.proofHash,
       stellarTxHash: user.eligibility.stellarTxHash,
+      stellarLedger: user.eligibility.stellarLedger,
       sorobanTxHash: user.eligibility.sorobanTxHash,
       verificationMethod: user.eligibility.verificationMethod,
     };
@@ -44,12 +46,16 @@ export class EligibilityService {
 
   async evaluate(
     userId: number,
+    userEmail: string,
     monthBalances: number[],
   ): Promise<{
     qualified: boolean;
     tier: string;
     proofHash?: string;
     stellarTxHash?: string | null;
+    stellarLedger?: number | null;
+    stellarExplorerUrl?: string | null;
+    horizonUrl?: string | null;
     sorobanTxHash?: string | null;
     verificationMethod?: string;
   }> {
@@ -69,6 +75,7 @@ export class EligibilityService {
             qualified: false,
             proofHash: null,
             stellarTxHash: null,
+            stellarLedger: null,
             sorobanTxHash: null,
             stellarAccountId: null,
             verificationMethod: null,
@@ -92,7 +99,12 @@ export class EligibilityService {
 
     const { proofHash, verificationMethod } =
       await this.zkService.generateAndVerify(monthBalances, 1000);
-    const anchored = await this.stellarService.anchorProof(userId, proofHash);
+    const anchored = await this.stellarService.submitProofHash(
+      proofHash,
+      userEmail,
+    );
+    const stellarTxHash = anchored?.txHash ?? null;
+    const stellarLedger = anchored?.ledger ?? null;
 
     await this.prisma.$transaction([
       this.prisma.user.update({
@@ -106,9 +118,10 @@ export class EligibilityService {
           monthBalances: JSON.stringify(monthBalances),
           qualified: true,
           proofHash,
-          stellarTxHash: anchored?.txHash ?? null,
+          stellarTxHash,
+          stellarLedger,
           sorobanTxHash: null,
-          stellarAccountId: anchored?.accountId ?? null,
+          stellarAccountId: null,
           verificationMethod,
           evaluatedAt: new Date(),
         },
@@ -118,9 +131,10 @@ export class EligibilityService {
           monthBalances: JSON.stringify(monthBalances),
           qualified: true,
           proofHash,
-          stellarTxHash: anchored?.txHash ?? null,
+          stellarTxHash,
+          stellarLedger,
           sorobanTxHash: null,
-          stellarAccountId: anchored?.accountId ?? null,
+          stellarAccountId: null,
           verificationMethod,
           evaluatedAt: new Date(),
         },
@@ -131,7 +145,14 @@ export class EligibilityService {
       qualified: true,
       tier: 'PRIME',
       proofHash,
-      stellarTxHash: anchored?.txHash ?? null,
+      stellarTxHash,
+      stellarLedger,
+      stellarExplorerUrl: stellarTxHash
+        ? `https://stellar.expert/explorer/testnet/tx/${stellarTxHash}`
+        : null,
+      horizonUrl: stellarTxHash
+        ? `https://horizon-testnet.stellar.org/transactions/${stellarTxHash}`
+        : null,
       sorobanTxHash: null,
       verificationMethod,
     };
