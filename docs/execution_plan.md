@@ -4,16 +4,16 @@
 - [x] ✅ Backend API testing complete (local test cases passing)
 - [x] ✅ Deployment configs complete (Railway + Vercel configured)
 - [x] ✅ Stellar testnet setup complete for account bootstrap (keypair generated + funded via Friendbot)
-- [ ] 🔄 Frontend scaffold in progress (Vite + React + Tailwind + core pages)
+- [x] ✅ Frontend overhaul complete (BuildVest-branded landing + investor dashboard)
 - [x] ✅ Noir ZK circuit implementation complete (`circuits/balance_check` + backend Noir prover integration with mock fallback)
 - [x] ✅ Stellar ManageData on-chain anchoring complete (PR #10)
 - [x] ✅ Soroban verifier contract scaffold added (`contracts/verifier/`) with `verify`/`is_verified` + unit tests
 - [x] ✅ Verification mode toggle added (`VERIFICATION_MODE=local|onchain`) with local/Soroban strategies and fallback
 - [x] ✅ Deploy script added (`scripts/deploy-verifier.sh`)
-- [ ] 🔜 Reset/demo script after integration
-- [ ] 🔜 Final polish + deploy verification (last step)
+- [x] ✅ Reset/demo scripts complete (`scripts/demo.ts`, `scripts/reset.ts`, `npm run demo:full`)
+- [x] ✅ Final polish + deploy verification complete
 
-> Note: Stellar CLI installation is still pending and required before Soroban contract deployment.
+> Soroban verifier contract deployed on Stellar testnet: `CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU`.
 
 # 1. Recommended Hackathon Strategy
 
@@ -96,7 +96,9 @@ BuildVestZK/
 │   └── src/
 │       └── main.nr
 ├── scripts/
-│   └── reset-and-demo.ts
+│   ├── demo.ts
+│   ├── reset.ts
+│   └── deploy-verifier.sh
 ├── test-data/
 │   ├── statement-pass.json
 │   ├── statement-fail.json
@@ -104,7 +106,8 @@ BuildVestZK/
 │   └── statement-fail.pdf
 ├── docs/
 │   ├── execution_plan.md
-│   └── DEMO_SCRIPT.md
+│   ├── DEPLOYMENT.md
+│   └── backend_testing.md
 ├── .env.example
 └── README.md
 ```
