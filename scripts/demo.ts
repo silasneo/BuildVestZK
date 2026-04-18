@@ -5,7 +5,8 @@ const DEMO_EMAIL = 'demo@buildvestzk.io';
 const DEMO_PASSWORD = 'demo-pass-123';
 const PASSING_BALANCES = [1500, 2300, 1800];
 const FAILING_BALANCES = [800, 1200, 500];
-const backendDir = process.cwd();
+const MAX_RETRY_ATTEMPTS = 20;
+const RETRY_DELAY_MS = 500;
 
 type AuthResponse = {
   accessToken: string;
@@ -53,7 +54,7 @@ function printCompletionBanner(): void {
 }
 
 async function ensureBackendRunning(): Promise<void> {
-  for (let attempt = 1; attempt <= 20; attempt += 1) {
+  for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt += 1) {
     try {
       await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
@@ -66,7 +67,7 @@ async function ensureBackendRunning(): Promise<void> {
       return;
     } catch {
       await new Promise((resolve) => {
-        setTimeout(resolve, 500);
+        setTimeout(resolve, RETRY_DELAY_MS);
       });
     }
   }
@@ -84,7 +85,7 @@ async function request<T>(
   },
 ): Promise<T> {
   let response: Response | null = null;
-  for (let attempt = 1; attempt <= 20; attempt += 1) {
+  for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt += 1) {
     try {
       response = await fetch(`${API_URL}${path}`, {
         method: options.method,
@@ -97,13 +98,15 @@ async function request<T>(
       break;
     } catch {
       await new Promise((resolve) => {
-        setTimeout(resolve, 500);
+        setTimeout(resolve, RETRY_DELAY_MS);
       });
     }
   }
 
   if (!response) {
-    throw new Error('fetch failed');
+    throw new Error(
+      `Failed to call ${API_URL}${path} after ${MAX_RETRY_ATTEMPTS} attempts`,
+    );
   }
 
   const payload = (await response.json()) as T | { message?: string };
@@ -150,8 +153,8 @@ async function run(): Promise<void> {
   printBanner();
 
   console.log(style.bold('📋 Step 1: Reset Database'));
-  execSync('npm run demo:reset', { cwd: backendDir, stdio: 'inherit' });
-  console.log(`   ${style.green('✅ Database cleared and re-seeded')}`);
+  execSync('npm run demo:reset', { cwd: process.cwd(), stdio: 'inherit' });
+  console.log(`   ${style.green('✅ Database cleared and schema applied')}`);
   console.log('');
 
   await ensureBackendRunning();
@@ -208,7 +211,7 @@ async function run(): Promise<void> {
   printCompletionBanner();
 }
 
-void run().catch((error: unknown) => {
+run().catch((error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
   console.error(style.red(`Demo failed: ${message}`));
   process.exit(1);

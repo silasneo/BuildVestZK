@@ -36,6 +36,4 @@ export function resetDatabase(): void {
   console.log(green('Database reset complete'));
 }
 
-if (process.argv[1]?.endsWith('reset.ts')) {
-  resetDatabase();
-}
+resetDatabase();
