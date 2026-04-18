@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ProofService } from '../proof/proof.service';
-import { StellarService } from '../proof/stellar.service';
+import { StellarService } from '../stellar/stellar.service';
+import { ZkService } from '../zk/zk.service';
 import { TierRulesEngine } from './tier-rules.engine';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class EligibilityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly tierRulesEngine: TierRulesEngine,
-    private readonly proofService: ProofService,
+    private readonly zkService: ZkService,
     private readonly stellarService: StellarService,
   ) {}
 
@@ -19,6 +19,7 @@ export class EligibilityService {
     qualified: boolean;
     proofHash: string | null;
     stellarTxHash: string | null;
+    stellarLedger: number | null;
     sorobanTxHash: string | null;
     verificationMethod: string | null;
   } | null> {
@@ -37,6 +38,7 @@ export class EligibilityService {
       qualified: user.eligibility.qualified,
       proofHash: user.eligibility.proofHash,
       stellarTxHash: user.eligibility.stellarTxHash,
+      stellarLedger: user.eligibility.stellarLedger,
       sorobanTxHash: user.eligibility.sorobanTxHash,
       verificationMethod: user.eligibility.verificationMethod,
     };
@@ -44,12 +46,16 @@ export class EligibilityService {
 
   async evaluate(
     userId: number,
+    userEmail: string,
     monthBalances: number[],
   ): Promise<{
     qualified: boolean;
     tier: string;
     proofHash?: string;
     stellarTxHash?: string | null;
+    stellarLedger?: number | null;
+    stellarExplorerUrl?: string | null;
+    horizonUrl?: string | null;
     sorobanTxHash?: string | null;
     verificationMethod?: string;
   }> {
@@ -69,6 +75,7 @@ export class EligibilityService {
             qualified: false,
             proofHash: null,
             stellarTxHash: null,
+            stellarLedger: null,
             sorobanTxHash: null,
             stellarAccountId: null,
             verificationMethod: null,
@@ -90,11 +97,15 @@ export class EligibilityService {
       };
     }
 
-    const { proofHash } = await this.proofService.generateAndVerify(
-      monthBalances,
-      1000,
+    const { proofHash, verificationMethod } =
+      await this.zkService.generateAndVerify(monthBalances, 1000);
+    const anchored = await this.stellarService.submitProofHash(
+      proofHash,
+      userEmail,
     );
-    const anchored = await this.stellarService.anchorProof(userId, proofHash);
+    const stellarTxHash = anchored?.txHash ?? null;
+    const stellarLedger = anchored?.ledger ?? null;
+    const network = this.getStellarNetwork();
 
     await this.prisma.$transaction([
       this.prisma.user.update({
@@ -108,10 +119,11 @@ export class EligibilityService {
           monthBalances: JSON.stringify(monthBalances),
           qualified: true,
           proofHash,
-          stellarTxHash: anchored?.txHash ?? null,
+          stellarTxHash,
+          stellarLedger,
           sorobanTxHash: null,
-          stellarAccountId: anchored?.accountId ?? null,
-          verificationMethod: 'mock',
+          stellarAccountId: null,
+          verificationMethod,
           evaluatedAt: new Date(),
         },
         create: {
@@ -120,10 +132,11 @@ export class EligibilityService {
           monthBalances: JSON.stringify(monthBalances),
           qualified: true,
           proofHash,
-          stellarTxHash: anchored?.txHash ?? null,
+          stellarTxHash,
+          stellarLedger,
           sorobanTxHash: null,
-          stellarAccountId: anchored?.accountId ?? null,
-          verificationMethod: 'mock',
+          stellarAccountId: null,
+          verificationMethod,
           evaluatedAt: new Date(),
         },
       }),
@@ -133,9 +146,34 @@ export class EligibilityService {
       qualified: true,
       tier: 'PRIME',
       proofHash,
-      stellarTxHash: anchored?.txHash ?? null,
+      stellarTxHash,
+      stellarLedger,
+      stellarExplorerUrl: stellarTxHash
+        ? `${this.getStellarExplorerBaseUrl(network)}${stellarTxHash}`
+        : null,
+      horizonUrl: stellarTxHash
+        ? `${this.getHorizonTransactionBaseUrl(network)}${stellarTxHash}`
+        : null,
       sorobanTxHash: null,
-      verificationMethod: 'mock',
+      verificationMethod,
     };
+  }
+
+  private getStellarNetwork(): 'testnet' | 'public' {
+    return process.env.STELLAR_NETWORK?.toLowerCase() === 'public'
+      ? 'public'
+      : 'testnet';
+  }
+
+  private getStellarExplorerBaseUrl(network: 'testnet' | 'public'): string {
+    return network === 'public'
+      ? 'https://stellar.expert/explorer/public/tx/'
+      : 'https://stellar.expert/explorer/testnet/tx/';
+  }
+
+  private getHorizonTransactionBaseUrl(network: 'testnet' | 'public'): string {
+    return network === 'public'
+      ? 'https://horizon.stellar.org/transactions/'
+      : 'https://horizon-testnet.stellar.org/transactions/';
   }
 }

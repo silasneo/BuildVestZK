@@ -193,7 +193,7 @@ curl -X POST "<BASE_URL>/eligibility/evaluate" -H "Content-Type: application/jso
   "qualified": true,
   "tier": "PRIME",
   "proofHash": "<hash>",
-  "verificationMethod": "mock"
+  "verificationMethod": "noir"
 }
 ```
 
@@ -297,7 +297,7 @@ curl "<BASE_URL>/eligibility/status" -H 'Authorization: Bearer <YOUR_TOKEN>'
   "status": "APPROVED",
   "qualified": true,
   "proofHash": "<hash>",
-  "verificationMethod": "mock"
+  "verificationMethod": "noir"
 }
 ```
 
@@ -380,4 +380,3 @@ curl -X POST "<BASE_URL>/auth/login" -H "Content-Type: application/json" -d '{"e
   - Copy `backend/.env.example` to `backend/.env`.
 - **CORS errors from frontend**
   - Backend allows `http://localhost:5173` and configured deployed frontend origins.
-

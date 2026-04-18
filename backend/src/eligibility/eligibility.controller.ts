@@ -40,6 +40,7 @@ export class EligibilityController {
   ) {
     return this.eligibilityService.evaluate(
       request.user.userId,
+      request.user.email,
       dto.monthBalances,
     );
   }
