@@ -12,31 +12,37 @@ function Landing() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const heroBackgroundImage =
+    'linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(1, 126, 254, 0.5)), url(https://images.unsplash.com/photo-1542394014-a9135c154ac3?auto=format&fit=crop&w=1920&q=80)';
+
   const navLinks = ['Marketplace', 'Investors', 'Originators', 'About'];
   const investments = [
     {
       name: 'Lagos Commercial Tower',
+      imageAlt: 'Modern commercial high-rise buildings in Lagos',
       type: 'Commercial Real Estate',
       apy: '14.2% APY',
       min: '$1,000',
       progress: 65,
-      image: 'https://images.unsplash.com/photo-1635071247661-ede154087b09',
+      image: 'https://images.unsplash.com/photo-1635071247661-ede154087b09?auto=format&fit=crop&w=800&h=320&q=80',
     },
     {
       name: 'Abuja Solar Farm',
+      imageAlt: 'Rows of solar panels at a large renewable energy farm',
       type: 'Renewable Energy',
       apy: '12.8% APY',
       min: '$1,500',
       progress: 82,
-      image: 'https://images.unsplash.com/photo-1641959164820-631b4cbf324c',
+      image: 'https://images.unsplash.com/photo-1641959164820-631b4cbf324c?auto=format&fit=crop&w=800&h=320&q=80',
     },
     {
       name: 'Port Harcourt Industrial Park',
+      imageAlt: 'Industrial park facilities with warehouse and logistics infrastructure',
       type: 'Infrastructure',
       apy: '16.4% APY',
       min: '$2,000',
       progress: 45,
-      image: 'https://images.unsplash.com/photo-1724919692221-ab499b1cbe78',
+      image: 'https://images.unsplash.com/photo-1724919692221-ab499b1cbe78?auto=format&fit=crop&w=800&h=320&q=80',
     },
   ];
 
@@ -115,8 +121,7 @@ function Landing() {
       <section
         className="relative overflow-hidden bg-cover bg-center text-white"
         style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(1, 126, 254, 0.5)), url(https://images.unsplash.com/photo-1542394014-a9135c154ac3)',
+          backgroundImage: heroBackgroundImage,
         }}
       >
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
@@ -164,7 +169,13 @@ function Landing() {
               className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="h-40 overflow-hidden rounded-xl">
-                <img src={investment.image} alt={investment.name} className="h-full w-full object-cover" />
+                <img
+                  src={investment.image}
+                  alt={investment.imageAlt}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               </div>
               <div className="mt-5 flex items-start justify-between gap-3">
                 <div>
