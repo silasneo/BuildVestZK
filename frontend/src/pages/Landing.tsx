@@ -20,7 +20,7 @@ function Landing() {
       apy: '14.2% APY',
       min: '$1,000',
       progress: 65,
-      gradient: 'from-indigo-500 to-blue-400',
+      gradient: 'from-bv-blue to-blue-400',
     },
     {
       name: 'Abuja Solar Farm',
@@ -28,7 +28,7 @@ function Landing() {
       apy: '12.8% APY',
       min: '$1,500',
       progress: 82,
-      gradient: 'from-cyan-500 to-emerald-400',
+      gradient: 'from-cyan-500 to-bv-green',
     },
     {
       name: 'Port Harcourt Industrial Park',
@@ -36,7 +36,7 @@ function Landing() {
       apy: '16.4% APY',
       min: '$2,000',
       progress: 45,
-      gradient: 'from-violet-500 to-fuchsia-400',
+      gradient: 'from-bv-blue to-bv-green',
     },
   ];
 
@@ -48,13 +48,13 @@ function Landing() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
-          <Link to="/" className="text-2xl font-bold text-indigo-700">
-            BuildVest
+          <Link to="/">
+            <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="h-8" />
           </Link>
 
           <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
             {navLinks.map((item) => (
-              <a key={item} href="#" className="transition hover:text-indigo-700">
+              <a key={item} href="#" className="transition hover:text-bv-blue">
                 {item}
               </a>
             ))}
@@ -63,13 +63,13 @@ function Landing() {
           <div className="hidden items-center gap-3 md:flex">
             <Link
               to="/login"
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-700"
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-bv-blue hover:text-bv-blue"
             >
               Sign In
             </Link>
             <Link
               to="/signup"
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+              className="rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-bv-blue/90"
             >
               Get Started
             </Link>
@@ -101,7 +101,7 @@ function Landing() {
               </Link>
               <Link
                 to="/signup"
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white"
+                className="rounded-lg bg-bv-blue px-4 py-2 text-center text-sm font-semibold text-white"
               >
                 Get Started
               </Link>
@@ -110,8 +110,8 @@ function Landing() {
         )}
       </header>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.35),transparent_55%)]" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#013a75] to-slate-900 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(1,126,254,0.35),transparent_55%)]" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold leading-tight md:text-6xl">
@@ -123,7 +123,7 @@ function Landing() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 to="/signup"
-                className="rounded-lg bg-indigo-500 px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-900/30 transition hover:bg-indigo-400"
+                className="rounded-lg bg-bv-blue px-6 py-3 font-semibold text-white shadow-lg shadow-bv-blue/30 transition hover:bg-bv-blue/90"
               >
                 Get Started
               </Link>
@@ -141,7 +141,7 @@ function Landing() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="mb-10 flex items-end justify-between gap-4">
           <h2 className="text-3xl font-bold text-slate-900">Live Investment Opportunities</h2>
-          <a href="#" className="text-sm font-semibold text-indigo-700 hover:text-indigo-600">
+          <a href="#" className="text-sm font-semibold text-bv-blue hover:text-bv-blue/80">
             See all opportunities →
           </a>
         </div>
@@ -157,18 +157,18 @@ function Landing() {
                   <h3 className="text-lg font-semibold text-slate-900">{investment.name}</h3>
                   <p className="text-sm text-slate-500">{investment.type}</p>
                 </div>
-                <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                <span className="rounded-full bg-bv-blue/10 px-3 py-1 text-xs font-semibold text-bv-blue">
                   {investment.apy}
                 </span>
               </div>
               <p className="mt-4 text-sm text-slate-600">Minimum Investment: {investment.min}</p>
               <div className="mt-3 h-2 w-full rounded-full bg-slate-200">
-                <div className="h-2 rounded-full bg-indigo-500" style={{ width: `${investment.progress}%` }} />
+                <div className="h-2 rounded-full bg-bv-blue" style={{ width: `${investment.progress}%` }} />
               </div>
               <p className="mt-2 text-xs font-semibold text-slate-500">{investment.progress}% funded</p>
               <a
                 href="#"
-                className="mt-4 inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-700"
+                className="mt-4 inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-bv-blue hover:text-bv-blue"
               >
                 View Details
               </a>
@@ -203,7 +203,7 @@ function Landing() {
                 <span className="inline-flex rounded-full bg-amber-200 px-3 py-1 text-xs font-semibold tracking-wide text-amber-800">
                   PRIME ✦
                 </span>
-                <span className="text-xs font-semibold text-indigo-700">Zero-Knowledge Verified</span>
+                <span className="text-xs font-semibold text-bv-blue">Zero-Knowledge Verified</span>
               </div>
               <h3 className="mt-4 text-2xl font-semibold text-slate-900">Prime Investor</h3>
               <p className="mt-2 text-slate-700">Premium access with ZK-verified eligibility</p>
@@ -224,7 +224,7 @@ function Landing() {
           <div className="mt-8">
             <Link
               to="/signup"
-              className="inline-flex rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500"
+              className="inline-flex rounded-lg bg-bv-blue px-6 py-3 text-sm font-semibold text-white transition hover:bg-bv-blue/90"
             >
               Check Your Eligibility
             </Link>
@@ -235,16 +235,16 @@ function Landing() {
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-slate-600 sm:flex-row sm:px-6">
           <div className="flex flex-wrap items-center gap-5">
-            <a href="#" className="hover:text-indigo-700">
+            <a href="#" className="hover:text-bv-blue">
               About
             </a>
-            <a href="#" className="hover:text-indigo-700">
+            <a href="#" className="hover:text-bv-blue">
               FAQ
             </a>
-            <a href="#" className="hover:text-indigo-700">
+            <a href="#" className="hover:text-bv-blue">
               Legal
             </a>
-            <a href="#" className="hover:text-indigo-700">
+            <a href="#" className="hover:text-bv-blue">
               Contact
             </a>
           </div>

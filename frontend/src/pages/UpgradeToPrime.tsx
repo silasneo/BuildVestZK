@@ -67,7 +67,7 @@ function UpgradeToPrime() {
                 type="number"
                 value={month1}
                 onChange={(event) => setMonth1(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
                 required
               />
             </label>
@@ -77,7 +77,7 @@ function UpgradeToPrime() {
                 type="number"
                 value={month2}
                 onChange={(event) => setMonth2(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
                 required
               />
             </label>
@@ -87,7 +87,7 @@ function UpgradeToPrime() {
                 type="number"
                 value={month3}
                 onChange={(event) => setMonth3(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
                 required
               />
             </label>
@@ -96,7 +96,7 @@ function UpgradeToPrime() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-gradient-to-r from-indigo-600 to-violet-500 px-4 py-3 font-semibold text-white transition hover:from-indigo-500 hover:to-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-bv-blue px-4 py-3 font-semibold text-white transition hover:bg-bv-blue/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? 'Evaluating...' : 'Evaluate Eligibility'}
           </button>

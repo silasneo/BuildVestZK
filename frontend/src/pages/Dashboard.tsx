@@ -118,7 +118,7 @@ function Dashboard() {
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="mb-8 text-2xl font-bold text-indigo-700">BuildVest</div>
+        <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="mb-8 h-8" />
         <nav className="space-y-1">
           {navItems.map((item) => (
             <a
@@ -126,7 +126,7 @@ function Dashboard() {
               href={item.href}
               className={`block rounded-lg px-3 py-2 text-sm font-medium ${
                 item.active
-                  ? 'bg-indigo-50 text-indigo-700'
+                  ? 'bg-bv-blue/5 text-bv-blue'
                   : 'text-slate-600 transition hover:bg-slate-100 hover:text-slate-900'
               }`}
               onClick={() => setSidebarOpen(false)}
@@ -190,7 +190,7 @@ function Dashboard() {
                 ? 'border-slate-300 bg-white'
                 : displayTier === 'PRIME'
                   ? 'border-amber-300 bg-amber-50'
-                  : 'border-indigo-200 bg-indigo-50'
+                  : 'border-bv-blue/20 bg-bv-blue/5'
             }`}
           >
             {!hasEvaluation && (
@@ -202,7 +202,7 @@ function Dashboard() {
                 <p className="mt-2 text-slate-600">Verify Eligibility →</p>
                 <a
                   href="/eligibility"
-                  className="mt-4 inline-flex rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                  className="mt-4 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white hover:bg-bv-blue/50"
                 >
                   Verify Eligibility
                 </a>
@@ -218,7 +218,7 @@ function Dashboard() {
             )}
             {hasEvaluation && displayTier === 'RETAIL' && (
               <div>
-                <span className="rounded-full bg-indigo-200 px-3 py-1 text-xs font-semibold text-indigo-800">
+                <span className="rounded-full bg-bv-blue/20 px-3 py-1 text-xs font-semibold text-bv-blue">
                   RETAIL INVESTOR
                 </span>
                 <h2 className="mt-3 text-2xl font-bold text-slate-900">Standard access</h2>
@@ -268,7 +268,7 @@ function Dashboard() {
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-lg font-semibold">Recent Investments</h2>
-              <a href="#" className="text-sm font-semibold text-indigo-700 hover:text-indigo-600">
+              <a href="#" className="text-sm font-semibold text-bv-blue hover:text-bv-blue/80">
                 View All
               </a>
             </div>
@@ -323,7 +323,7 @@ function Dashboard() {
               <p>
                 <span className="font-semibold text-slate-800">Stellar transaction:</span>{' '}
                 {status?.stellarTxHash ? (
-                  <a href={stellarExplorerUrl} target="_blank" rel="noreferrer" className="text-indigo-700 hover:text-indigo-600">
+                  <a href={stellarExplorerUrl} target="_blank" rel="noreferrer" className="text-bv-blue hover:text-bv-blue/80">
                     View on Explorer
                   </a>
                 ) : (
@@ -333,7 +333,7 @@ function Dashboard() {
             </div>
             <a
               href="/eligibility"
-              className="mt-5 inline-flex rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+              className="mt-5 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-bv-blue/50"
             >
               Re-verify
             </a>

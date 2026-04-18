@@ -54,7 +54,7 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
           <button
             type="button"
             className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
-              mode === 'signup' ? 'bg-indigo-600 text-white' : 'text-gray-300'
+              mode === 'signup' ? 'bg-bv-blue text-white' : 'text-gray-300'
             }`}
             onClick={() => setMode('signup')}
           >
@@ -63,7 +63,7 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
           <button
             type="button"
             className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
-              mode === 'login' ? 'bg-indigo-600 text-white' : 'text-gray-300'
+              mode === 'login' ? 'bg-bv-blue text-white' : 'text-gray-300'
             }`}
             onClick={() => setMode('login')}
           >
@@ -81,7 +81,7 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
               required
             />
           </div>
@@ -94,14 +94,14 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-gradient-to-r from-indigo-600 to-violet-500 px-4 py-2 font-semibold text-white transition hover:from-indigo-500 hover:to-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-bv-blue px-4 py-2 font-semibold text-white transition hover:bg-bv-blue/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? 'Please wait...' : mode === 'signup' ? 'Create Account' : 'Log In'}
           </button>
