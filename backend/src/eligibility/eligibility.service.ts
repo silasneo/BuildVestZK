@@ -105,6 +105,7 @@ export class EligibilityService {
     );
     const stellarTxHash = anchored?.txHash ?? null;
     const stellarLedger = anchored?.ledger ?? null;
+    const network = this.getStellarNetwork();
 
     await this.prisma.$transaction([
       this.prisma.user.update({
@@ -148,13 +149,31 @@ export class EligibilityService {
       stellarTxHash,
       stellarLedger,
       stellarExplorerUrl: stellarTxHash
-        ? `https://stellar.expert/explorer/testnet/tx/${stellarTxHash}`
+        ? `${this.getStellarExplorerBaseUrl(network)}${stellarTxHash}`
         : null,
       horizonUrl: stellarTxHash
-        ? `https://horizon-testnet.stellar.org/transactions/${stellarTxHash}`
+        ? `${this.getHorizonTransactionBaseUrl(network)}${stellarTxHash}`
         : null,
       sorobanTxHash: null,
       verificationMethod,
     };
+  }
+
+  private getStellarNetwork(): 'testnet' | 'public' {
+    return process.env.STELLAR_NETWORK?.toLowerCase() === 'public'
+      ? 'public'
+      : 'testnet';
+  }
+
+  private getStellarExplorerBaseUrl(network: 'testnet' | 'public'): string {
+    return network === 'public'
+      ? 'https://stellar.expert/explorer/public/tx/'
+      : 'https://stellar.expert/explorer/testnet/tx/';
+  }
+
+  private getHorizonTransactionBaseUrl(network: 'testnet' | 'public'): string {
+    return network === 'public'
+      ? 'https://horizon.stellar.org/transactions/'
+      : 'https://horizon-testnet.stellar.org/transactions/';
   }
 }

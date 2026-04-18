@@ -1,6 +1,8 @@
 import { EligibilityService } from './eligibility.service';
 
 describe('EligibilityService', () => {
+  const originalEnv = process.env;
+
   const prisma = {
     $transaction: jest.fn().mockResolvedValue([]),
     user: { update: jest.fn().mockResolvedValue({}) },
@@ -23,12 +25,17 @@ describe('EligibilityService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    process.env = { ...originalEnv };
     service = new EligibilityService(
       prisma as never,
       tierRulesEngine as never,
       zkService as never,
       stellarService as never,
     );
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
   });
 
   it('does not generate a proof when investor is not qualified', async () => {
@@ -99,5 +106,31 @@ describe('EligibilityService', () => {
     expect(result.stellarLedger).toBeNull();
     expect(result.stellarExplorerUrl).toBeNull();
     expect(result.horizonUrl).toBeNull();
+  });
+
+  it('returns public network explorer links when STELLAR_NETWORK is public', async () => {
+    process.env.STELLAR_NETWORK = 'public';
+    tierRulesEngine.evaluate.mockReturnValue(true);
+    zkService.generateAndVerify.mockResolvedValue({
+      proofHash: 'proof-hash',
+      verificationMethod: 'noir',
+    });
+    stellarService.submitProofHash.mockResolvedValue({
+      txHash: 'stellar-tx-hash',
+      ledger: 12345,
+    });
+
+    const result = await service.evaluate(
+      1,
+      'user@example.com',
+      [1500, 2300, 1800],
+    );
+
+    expect(result.stellarExplorerUrl).toBe(
+      'https://stellar.expert/explorer/public/tx/stellar-tx-hash',
+    );
+    expect(result.horizonUrl).toBe(
+      'https://horizon.stellar.org/transactions/stellar-tx-hash',
+    );
   });
 });

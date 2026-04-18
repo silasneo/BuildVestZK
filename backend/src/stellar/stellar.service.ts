@@ -16,6 +16,7 @@ type StellarSubmissionResult = {
 
 @Injectable()
 export class StellarService {
+  private static readonly MANAGE_DATA_KEY_PREFIX = 'buildvestzk:proof:';
   private readonly logger = new Logger(StellarService.name);
 
   async submitProofHash(
@@ -61,7 +62,9 @@ export class StellarService {
   }
 
   private getNetwork(): 'testnet' | 'public' {
-    return process.env.STELLAR_NETWORK === 'public' ? 'public' : 'testnet';
+    return process.env.STELLAR_NETWORK?.toLowerCase() === 'public'
+      ? 'public'
+      : 'testnet';
   }
 
   private getHorizonUrl(network: 'testnet' | 'public'): string {
@@ -78,15 +81,15 @@ export class StellarService {
   }
 
   private getManageDataKey(userEmail: string): string {
-    const prefix = 'buildvestzk:proof:';
     const sanitizedEmail = userEmail
       .toLowerCase()
       .replace(/[^a-z0-9:_-]/g, '_');
     const maxLength = 64;
-    const maxEmailLength = maxLength - prefix.length;
+    const maxEmailLength =
+      maxLength - StellarService.MANAGE_DATA_KEY_PREFIX.length;
 
     if (sanitizedEmail.length <= maxEmailLength) {
-      return `${prefix}${sanitizedEmail}`;
+      return `${StellarService.MANAGE_DATA_KEY_PREFIX}${sanitizedEmail}`;
     }
 
     const hashSuffix = createHash('sha256')
@@ -97,7 +100,7 @@ export class StellarService {
       0,
       maxEmailLength - hashSuffix.length - 1,
     );
-    return `${prefix}${truncated}_${hashSuffix}`;
+    return `${StellarService.MANAGE_DATA_KEY_PREFIX}${truncated}_${hashSuffix}`;
   }
 
   private getManageDataValue(proofHash: string): Buffer {
