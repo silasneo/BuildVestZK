@@ -20,7 +20,7 @@ function Landing() {
       apy: '14.2% APY',
       min: '$1,000',
       progress: 65,
-      gradient: 'from-bv-blue to-blue-400',
+      image: 'https://images.unsplash.com/photo-1635071247661-ede154087b09',
     },
     {
       name: 'Abuja Solar Farm',
@@ -28,7 +28,7 @@ function Landing() {
       apy: '12.8% APY',
       min: '$1,500',
       progress: 82,
-      gradient: 'from-cyan-500 to-bv-green',
+      image: 'https://images.unsplash.com/photo-1641959164820-631b4cbf324c',
     },
     {
       name: 'Port Harcourt Industrial Park',
@@ -36,7 +36,7 @@ function Landing() {
       apy: '16.4% APY',
       min: '$2,000',
       progress: 45,
-      gradient: 'from-bv-blue to-bv-green',
+      image: 'https://images.unsplash.com/photo-1724919692221-ab499b1cbe78',
     },
   ];
 
@@ -112,8 +112,13 @@ function Landing() {
         )}
       </header>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-[#013a75] to-slate-900 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(1,126,254,0.35),transparent_55%)]" />
+      <section
+        className="relative overflow-hidden bg-cover bg-center text-white"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(0, 0, 0, 0.75), rgba(1, 126, 254, 0.5)), url(https://images.unsplash.com/photo-1542394014-a9135c154ac3)',
+        }}
+      >
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold leading-tight md:text-6xl">
@@ -130,10 +135,15 @@ function Landing() {
                 Get Started
               </Link>
               <a
-                href="#"
-                className="rounded-lg border border-slate-500 bg-slate-900/50 px-6 py-3 font-semibold text-slate-100 transition hover:border-slate-300"
+                href="https://github.com/silasneo/BuildVestZK"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-500 bg-slate-900/50 px-6 py-3 font-semibold text-slate-100 transition hover:border-slate-300"
               >
-                Learn More
+                <svg viewBox="0 0 16 16" aria-hidden="true" className="h-5 w-5 fill-current">
+                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49C3.78 14.09 3.31 12.78 3.31 12.78c-.36-.92-.88-1.16-.88-1.16-.72-.49.05-.48.05-.48.79.06 1.21.81 1.21.81.71 1.2 1.85.86 2.3.66.07-.51.28-.86.5-1.06-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.72 7.72 0 0 1 8 4.02c.68 0 1.37.09 2.01.26 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.14.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+                </svg>
+                View on GitHub
               </a>
             </div>
           </div>
@@ -153,7 +163,9 @@ function Landing() {
               key={investment.name}
               className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className={`h-40 rounded-xl bg-gradient-to-br ${investment.gradient}`} />
+              <div className="h-40 overflow-hidden rounded-xl">
+                <img src={investment.image} alt={investment.name} className="h-full w-full object-cover" />
+              </div>
               <div className="mt-5 flex items-start justify-between gap-3">
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900">{investment.name}</h3>
