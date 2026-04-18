@@ -21,6 +21,10 @@ describe('EligibilityService', () => {
     submitProofHash: jest.fn(),
   };
 
+  const verificationService = {
+    verify: jest.fn(),
+  };
+
   let service: EligibilityService;
 
   beforeEach(() => {
@@ -31,6 +35,7 @@ describe('EligibilityService', () => {
       tierRulesEngine as never,
       zkService as never,
       stellarService as never,
+      verificationService as never,
     );
   });
 
@@ -49,6 +54,7 @@ describe('EligibilityService', () => {
 
     expect(result).toEqual({ qualified: false, tier: 'RETAIL' });
     expect(zkService.generateAndVerify).not.toHaveBeenCalled();
+    expect(verificationService.verify).not.toHaveBeenCalled();
   });
 
   it('uses noir verification method when zk proof generation succeeds', async () => {
@@ -61,6 +67,10 @@ describe('EligibilityService', () => {
       txHash: 'stellar-tx-hash',
       ledger: 12345,
     });
+    verificationService.verify.mockResolvedValue({
+      verified: true,
+      verificationMethod: 'noir',
+    });
 
     const result = await service.evaluate(
       1,
@@ -72,6 +82,7 @@ describe('EligibilityService', () => {
     expect(result.proofHash).toBe('proof-hash');
     expect(result.stellarTxHash).toBe('stellar-tx-hash');
     expect(result.stellarLedger).toBe(12345);
+    expect(result.sorobanTxHash).toBeNull();
     expect(result.stellarExplorerUrl).toBe(
       'https://stellar.expert/explorer/testnet/tx/stellar-tx-hash',
     );
@@ -86,6 +97,9 @@ describe('EligibilityService', () => {
       'proof-hash',
       'user@example.com',
     );
+    expect(verificationService.verify).toHaveBeenCalledWith('proof-hash', [
+      '1000',
+    ]);
   });
 
   it('returns null stellar fields when Stellar submission fails', async () => {
@@ -95,6 +109,10 @@ describe('EligibilityService', () => {
       verificationMethod: 'mock',
     });
     stellarService.submitProofHash.mockResolvedValue(null);
+    verificationService.verify.mockResolvedValue({
+      verified: true,
+      verificationMethod: 'noir',
+    });
 
     const result = await service.evaluate(
       1,
@@ -119,6 +137,10 @@ describe('EligibilityService', () => {
       txHash: 'stellar-tx-hash',
       ledger: 12345,
     });
+    verificationService.verify.mockResolvedValue({
+      verified: true,
+      verificationMethod: 'noir',
+    });
 
     const result = await service.evaluate(
       1,
@@ -131,6 +153,37 @@ describe('EligibilityService', () => {
     );
     expect(result.horizonUrl).toBe(
       'https://horizon.stellar.org/transactions/stellar-tx-hash',
+    );
+  });
+
+  it('includes Soroban metadata when verification is on-chain', async () => {
+    tierRulesEngine.evaluate.mockReturnValue(true);
+    zkService.generateAndVerify.mockResolvedValue({
+      proofHash: 'proof-hash',
+      verificationMethod: 'noir',
+    });
+    stellarService.submitProofHash.mockResolvedValue({
+      txHash: 'stellar-tx-hash',
+      ledger: 12345,
+    });
+    verificationService.verify.mockResolvedValue({
+      verified: true,
+      verificationMethod: 'onchain',
+      sorobanTxHash: 'soroban-tx-hash',
+      sorobanExplorerUrl:
+        'https://stellar.expert/explorer/testnet/tx/soroban-tx-hash',
+    });
+
+    const result = await service.evaluate(
+      1,
+      'user@example.com',
+      [1500, 2300, 1800],
+    );
+
+    expect(result.verificationMethod).toBe('onchain');
+    expect(result.sorobanTxHash).toBe('soroban-tx-hash');
+    expect(result.sorobanExplorerUrl).toBe(
+      'https://stellar.expert/explorer/testnet/tx/soroban-tx-hash',
     );
   });
 });

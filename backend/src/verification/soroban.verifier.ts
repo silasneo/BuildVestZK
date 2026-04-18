@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { VerificationResult } from './verification.interface.js';
+import type { VerificationResult } from './verification.interface';
 
 /**
  * Soroban on-chain verification strategy.
@@ -13,7 +13,8 @@ export class SorobanVerifier {
 
   async verify(
     proofHash: string,
-    _publicInputs: string[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    publicInputs: string[],
   ): Promise<VerificationResult> {
     const contractId = process.env.SOROBAN_VERIFIER_CONTRACT_ID?.trim();
     const rpcUrl =
@@ -44,14 +45,12 @@ export class SorobanVerifier {
       Networks,
       TransactionBuilder,
       BASE_FEE,
-      SorobanRpc,
-      xdr,
+      rpc,
       nativeToScVal,
-      Address,
       Contract,
     } = await import('@stellar/stellar-sdk');
 
-    const server = new SorobanRpc.Server(rpcUrl);
+    const server = new rpc.Server(rpcUrl);
     const keypair = Keypair.fromSecret(secretKey);
     const account = await server.getAccount(keypair.publicKey());
     const network =
@@ -99,16 +98,12 @@ export class SorobanVerifier {
 
     // Poll for confirmation
     let getResponse = await server.getTransaction(sendResponse.hash);
-    while (
-      getResponse.status === SorobanRpc.Api.GetTransactionStatus.NOT_FOUND
-    ) {
+    while (getResponse.status === rpc.Api.GetTransactionStatus.NOT_FOUND) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       getResponse = await server.getTransaction(sendResponse.hash);
     }
 
-    if (
-      getResponse.status !== SorobanRpc.Api.GetTransactionStatus.SUCCESS
-    ) {
+    if (getResponse.status !== rpc.Api.GetTransactionStatus.SUCCESS) {
       throw new Error(
         `Soroban transaction failed with status: ${getResponse.status}`,
       );

@@ -102,8 +102,10 @@ export class EligibilityService {
       };
     }
 
-    const { proofHash, verificationMethod: zkMethod } =
-      await this.zkService.generateAndVerify(monthBalances, 1000);
+    const { proofHash } = await this.zkService.generateAndVerify(
+      monthBalances,
+      1000,
+    );
     const anchored = await this.stellarService.submitProofHash(
       proofHash,
       userEmail,

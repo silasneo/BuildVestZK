@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { LocalVerifier } from './local.verifier.js';
-import { SorobanVerifier } from './soroban.verifier.js';
-import type { VerificationResult } from './verification.interface.js';
+import { LocalVerifier } from './local.verifier';
+import { SorobanVerifier } from './soroban.verifier';
+import type { VerificationResult } from './verification.interface';
 
 /**
  * Verification service with toggle between local and on-chain modes.
@@ -23,17 +23,14 @@ export class VerificationService {
     proofHash: string,
     publicInputs: string[],
   ): Promise<VerificationResult> {
-    const mode = (
-      process.env.VERIFICATION_MODE || 'local'
-    ).toLowerCase();
+    const mode = (process.env.VERIFICATION_MODE || 'local').toLowerCase();
 
     if (mode === 'onchain') {
       try {
         this.logger.log('Attempting on-chain Soroban verification');
         return await this.sorobanVerifier.verify(proofHash, publicInputs);
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : String(error);
+        const message = error instanceof Error ? error.message : String(error);
         this.logger.warn(
           `On-chain verification failed, falling back to local: ${message}`,
         );

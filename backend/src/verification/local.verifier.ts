@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { VerificationResult } from './verification.interface.js';
+import type { VerificationResult } from './verification.interface';
 
 /**
  * Local (Barretenberg / mock) verification strategy.
@@ -12,10 +12,8 @@ import type { VerificationResult } from './verification.interface.js';
 export class LocalVerifier {
   private readonly logger = new Logger(LocalVerifier.name);
 
-  async verify(
-    _proofHash: string,
-    _publicInputs: string[],
-  ): Promise<VerificationResult> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  verify(proofHash: string, publicInputs: string[]): VerificationResult {
     this.logger.log('Verifying proof locally (Barretenberg / mock)');
     return {
       verified: true,
