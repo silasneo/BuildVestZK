@@ -17,6 +17,9 @@ interface EligibilityStatus {
   stellarTxHash: string | null;
   sorobanTxHash: string | null;
   verificationMethod: string | null;
+  verifiedAt?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 
 function Dashboard() {
@@ -69,7 +72,8 @@ function Dashboard() {
     ? `https://stellar.expert/explorer/testnet/tx/${status.stellarTxHash}`
     : '#';
   const proofDisplay = status?.proofHash ? `${status.proofHash.slice(0, 12)}...${status.proofHash.slice(-8)}` : 'N/A';
-  const verificationDate = hasEvaluation ? new Date().toLocaleDateString() : 'N/A';
+  const verificationTimestamp = status?.verifiedAt || status?.updatedAt || status?.createdAt;
+  const verificationDate = verificationTimestamp ? new Date(verificationTimestamp).toLocaleDateString() : 'N/A';
   const navItems = [
     { label: 'Dashboard', href: '/dashboard', active: true },
     { label: 'Marketplace', href: '#', active: false },
