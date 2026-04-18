@@ -8,7 +8,7 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
   const token = localStorage.getItem('accessToken');
 
   if (!token) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
@@ -18,7 +18,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route path="/auth" element={<SignupLogin />} />
+      <Route path="/auth" element={<Navigate to="/signup" replace />} />
+      <Route path="/signup" element={<SignupLogin initialMode="signup" />} />
+      <Route path="/register" element={<SignupLogin initialMode="signup" />} />
+      <Route path="/login" element={<SignupLogin initialMode="login" />} />
       <Route
         path="/dashboard"
         element={
@@ -29,6 +32,14 @@ function App() {
       />
       <Route
         path="/upgrade"
+        element={
+          <ProtectedRoute>
+            <UpgradeToPrime />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/eligibility"
         element={
           <ProtectedRoute>
             <UpgradeToPrime />

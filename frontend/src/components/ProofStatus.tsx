@@ -19,7 +19,7 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
           <span className="text-gray-400">Proof Hash</span>
           {proofHash ? (
             <div className="flex items-center gap-2">
-              <code className="rounded bg-gray-900 px-2 py-1 text-xs text-indigo-300">{truncateHash(proofHash)}</code>
+              <code className="rounded bg-gray-900 px-2 py-1 text-xs text-bv-blue/70">{truncateHash(proofHash)}</code>
               <button
                 type="button"
                 className="rounded bg-gray-700 px-2 py-1 text-xs font-medium hover:bg-gray-600"
@@ -39,7 +39,7 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
               href={`https://horizon-testnet.stellar.org/transactions/${stellarTxHash}`}
               target="_blank"
               rel="noreferrer"
-              className="text-indigo-300 hover:text-indigo-200"
+              className="text-bv-blue/70 hover:text-bv-blue/60"
             >
               View Transaction
             </a>
@@ -54,7 +54,7 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
               href={`https://stellar.expert/explorer/testnet/tx/${sorobanTxHash}`}
               target="_blank"
               rel="noreferrer"
-              className="text-indigo-300 hover:text-indigo-200"
+              className="text-bv-blue/70 hover:text-bv-blue/60"
             >
               View Transaction
             </a>
@@ -64,7 +64,7 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
         </div>
         <div className="flex items-center justify-between gap-3">
           <span className="text-gray-400">Verification Method</span>
-          <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-200">
+          <span className="rounded-full bg-bv-blue/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-bv-blue/60">
             {verificationMethod || 'N/A'}
           </span>
         </div>
