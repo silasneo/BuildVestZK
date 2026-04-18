@@ -89,7 +89,7 @@ export class ZkService {
       (circuit as { bytecode?: string }).bytecode,
     ) as Record<string, unknown>;
     const input = {
-      balances: monthBalances.map((balance) => balance.toString()),
+      balances: monthBalances.map((monthBalance) => monthBalance.toString()),
       threshold: threshold.toString(),
     };
 
