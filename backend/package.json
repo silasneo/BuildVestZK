@@ -18,7 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "circuit:compile": "cd ../circuits/balance_check && nargo compile"
+    "circuit:compile": "cd ../circuits/balance_check && nargo compile",
+    "demo": "ts-node ../scripts/demo.ts",
+    "demo:reset": "ts-node ../scripts/reset.ts",
+    "demo:full": "npm run demo:reset && npm run demo"
   },
   "dependencies": {
     "@noir-lang/backend_barretenberg": "^0.36.0",

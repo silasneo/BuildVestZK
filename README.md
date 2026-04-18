@@ -29,6 +29,17 @@ npm run start:dev
 
 Backend runs at `http://localhost:3000`.
 
+### Demo Commands (Judge Flow)
+
+In a second terminal (keep backend running):
+
+```bash
+cd backend
+npm run demo         # reset + pass case + fail case
+npm run demo:reset   # reset database only
+npm run demo:full    # reset, then run demo
+```
+
 ### Frontend
 
 ```bash
