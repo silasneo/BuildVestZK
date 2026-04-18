@@ -52,13 +52,15 @@ function Landing() {
             <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="h-8" />
           </Link>
 
+          {/* Commenting out desktop navigation links
           <nav className="hidden items-center gap-7 text-sm font-medium text-slate-600 md:flex">
-          /*   {navLinks.map((item) => (
+             {navLinks.map((item) => (
               <a key={item} href="#" className="transition hover:text-bv-blue">
                 {item}
               </a>
-            ))} */
+            ))} 
           </nav>
+          */}
 
           <div className="hidden items-center gap-3 md:flex">
             <Link
@@ -141,8 +143,8 @@ function Landing() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="mb-10 flex items-end justify-between gap-4">
           <h2 className="text-3xl font-bold text-slate-900">Live Investment Opportunities</h2>
-          <a href="#" className="text-sm font-semibold text-bv-blue hover:text-bv-blue/80">
-            See all opportunities →
+          <a href="https://buildvest.net/" target="_blank" className="text-sm font-semibold text-bv-blue hover:text-bv-blue/80">
+            See all opportunities &amp; Learn more at BuildVest.net →
           </a>
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -166,12 +168,14 @@ function Landing() {
                 <div className="h-2 rounded-full bg-bv-blue" style={{ width: `${investment.progress}%` }} />
               </div>
               <p className="mt-2 text-xs font-semibold text-slate-500">{investment.progress}% funded</p>
+              {/* Commenting out asset links
               <a
                 href="#"
                 className="mt-4 inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-bv-blue hover:text-bv-blue"
               >
                 View Details
               </a>
+              */}
             </article>
           ))}
         </div>
