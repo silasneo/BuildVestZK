@@ -202,7 +202,7 @@ function Dashboard() {
                 <p className="mt-2 text-slate-600">Verify Eligibility →</p>
                 <a
                   href="/eligibility"
-                  className="mt-4 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white hover:bg-bv-blue/50"
+                  className="mt-4 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white hover:bg-bv-blue/90"
                 >
                   Verify Eligibility
                 </a>
@@ -333,7 +333,7 @@ function Dashboard() {
             </div>
             <a
               href="/eligibility"
-              className="mt-5 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-bv-blue/50"
+              className="mt-5 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-bv-blue/90"
             >
               Re-verify
             </a>
