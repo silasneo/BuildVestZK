@@ -6,7 +6,10 @@
 - [x] ✅ Stellar testnet setup complete for account bootstrap (keypair generated + funded via Friendbot)
 - [ ] 🔄 Frontend scaffold in progress (Vite + React + Tailwind + core pages)
 - [x] ✅ Noir ZK circuit implementation complete (`circuits/balance_check` + backend Noir prover integration with mock fallback)
-- [ ] 🔜 Stellar on-chain integration (ManageData + Soroban verification) after ZK circuit
+- [x] ✅ Stellar ManageData on-chain anchoring complete (PR #10)
+- [x] ✅ Soroban verifier contract scaffold added (`contracts/verifier/`) with `verify`/`is_verified` + unit tests
+- [x] ✅ Verification mode toggle added (`VERIFICATION_MODE=local|onchain`) with local/Soroban strategies and fallback
+- [x] ✅ Deploy script added (`scripts/deploy-verifier.sh`)
 - [ ] 🔜 Reset/demo script after integration
 - [ ] 🔜 Final polish + deploy verification (last step)
 
