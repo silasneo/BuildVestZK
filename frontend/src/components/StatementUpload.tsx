@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 
 interface StatementUploadProps {
-  onFileSelect?: (file: File) => void;
+  onFileSelect?: (file: File | null) => void;
 }
 
 function StatementUpload({ onFileSelect }: StatementUploadProps) {
@@ -11,7 +11,7 @@ function StatementUpload({ onFileSelect }: StatementUploadProps) {
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-      <p className="mb-3 text-sm text-slate-700">Upload bank statement (optional — for visual demo only)</p>
+      <p className="mb-3 text-sm text-slate-700">Upload your bank statement PDF (required)</p>
       <label
         htmlFor={inputId}
         className="inline-block cursor-pointer rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-bv-blue/90"
@@ -28,6 +28,7 @@ function StatementUpload({ onFileSelect }: StatementUploadProps) {
           if (!file) {
             setFileName('No file selected');
             setHasFile(false);
+            onFileSelect?.(null);
             return;
           }
           setFileName(file.name);
