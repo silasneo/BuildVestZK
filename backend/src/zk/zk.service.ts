@@ -86,7 +86,7 @@ export class ZkService {
 
     const noir = new NoirConstructor(circuit) as Record<string, unknown>;
     const backend = new BackendConstructor(
-      (circuit as { bytecode?: string }).bytecode,
+      circuit,
     ) as Record<string, unknown>;
     const input = {
       balances: monthBalances.map((monthBalance) => monthBalance.toString()),
