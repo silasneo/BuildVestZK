@@ -29,6 +29,33 @@
 | Soroban contract | CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU | ✅ On-chain verification |
 | Stellar network | Testnet | ✅ Proof hash anchored |
 
+## 0.2 Milestone Completion Update (2026-04-19)
+
+- [x] ✅ Milestone 1: Real Noir proof generation + Soroban on-chain verification complete
+- [x] ✅ Milestone 2: Deterministic sample PDF bank-statement demo flow complete
+- [x] ✅ Milestone 3: Eligibility page redesign to BuildVest brand colors complete
+
+Real pipeline:
+
+```text
+Real Noir circuit proof (nargo 0.36.0) → SHA-256 proof hash → Stellar ManageData tx → Soroban on-chain verification
+```
+
+Sample PDF set (frontend/public/samples):
+
+| File | Balances | Result |
+|------|----------|--------|
+| `statement_pass_high.pdf` | `[2500, 3100, 1800]` | ✅ PRIME |
+| `statement_pass_borderline.pdf` | `[1050, 1200, 1001]` | ✅ PRIME |
+| `statement_fail.pdf` | `[1500, 800, 2200]` | ❌ Rejected |
+
+Eligibility page behavior now enforced:
+- Evaluate button disabled until a PDF is uploaded
+- Known sample PDFs auto-fill read-only balances
+- Unknown PDFs show warning and allow manual balance entry
+- Pass path runs real Noir + Soroban verification + PRIME upgrade
+- Fail path shows rejection copy and return-to-dashboard action
+
 # 1. Recommended Hackathon Strategy
 
 - Start a **fresh repo** for `BuildVestZK`; do not import code from main BuildVest MVP repos.
@@ -608,11 +635,11 @@ npx ts-node scripts/reset-and-demo.ts fail
 | 11 | **Landing page** (hero + how it works + CTA + hackathon footer) | 15 min | 🔴 |
 | 12 | SignupLogin page | 15 min | 🔴 |
 | 13 | Dashboard page (tier badge, status, upgrade button) | 15 min | 🔴 |
-| 14 | UpgradeToPrime page (upload visual + balance inputs + submit + result) | 20 min | 🔴 |
-| 15 | Generate test PDFs | 5 min | 🟡 |
+| 14 | UpgradeToPrime page redesign (light theme + branded actions + upload state + pass/fail UX) | 20 min | ✅ |
+| 15 | Generate deterministic sample PDFs + filename→balance mapping demo flow | 5 min | ✅ |
 | 16 | Install Noir (noirup, pin `nargo 0.36.0`) | 3 min | ✅ |
-| 17 | Write Noir circuit (3 assertions) | 5 min | 🟡 |
-| 18 | Compile circuit (nargo compile) | 2 min | 🟡 |
+| 17 | Write Noir circuit (3 assertions) | 5 min | ✅ |
+| 18 | Compile circuit (nargo compile) | 2 min | ✅ |
 | 19 | Swap ProofService to real Noir (noir_js + barretenberg) | 20 min | ✅ |
 | 20 | Test real proof generation + verification | 10 min | ✅ |
 | 21 | Generate Stellar testnet keypair + fund via friendbot | 2 min | 🟢 |

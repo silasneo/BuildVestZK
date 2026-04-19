@@ -14,6 +14,8 @@ All core features are complete and merged ✅
 5. ✅ `symbol_short!("verified")` fix in verifier contract
 6. ✅ Demo/reset scripts (`demo`, `demo:reset`, `demo:full`)
 7. ✅ BuildVest-branded frontend (landing + dashboard)
+8. ✅ Deterministic sample PDF demo flow (known PDFs auto-populate balances, unknown PDFs allow manual entry)
+9. ✅ Eligibility page redesign (light background, BuildVest branding, blue actions, green upload success state)
 
 ## Tech Stack
 
@@ -54,6 +56,37 @@ flowchart LR
   G --> H
   H --> I[Persist profile + PRIME status + explorer links]
 ```
+
+## Verified Real Proof Pipeline
+
+```text
+Real Noir circuit proof (nargo 0.36.0) → SHA-256 proof hash → Stellar ManageData tx → Soroban on-chain verification ✅
+```
+
+## Sample PDF Demo Flow
+
+Known sample PDFs in `frontend/public/samples/`:
+
+| File | Balances | Result |
+|------|----------|--------|
+| `statement_pass_high.pdf` | `[2500, 3100, 1800]` | ✅ All > $1,000 → PRIME upgrade |
+| `statement_pass_borderline.pdf` | `[1050, 1200, 1001]` | ✅ Barely passes → PRIME upgrade |
+| `statement_fail.pdf` | `[1500, 800, 2200]` | ❌ Month 2 < $1,000 → Rejected |
+
+Behavior:
+- PDF upload is required (Evaluate button remains disabled until upload)
+- Known PDF → balances auto-populate as read-only inputs
+- Unknown PDF → warning shown + editable balances for manual test input
+- Pass → Noir proof + Soroban verification + PRIME upgrade
+- Fail → `Does not qualify. All 3 monthly balances must exceed $1,000.` + `Return to Dashboard`
+
+## Eligibility Page Redesign
+
+- Light background and dark text inputs
+- BuildVest branding with logo/header above the upgrade card
+- Blue action buttons (`Choose PDF`, `Evaluate Eligibility`)
+- Green checkmark confirmation after successful PDF upload
+- Sample PDFs are downloadable directly from the eligibility page
 
 ## Deployed Contract & Explorer Links
 
@@ -174,6 +207,28 @@ When proofs succeed end-to-end with Soroban verification, API responses show:
   "verifiedAt": "2026-04-19T16:06:20.934Z"
 }
 ```
+
+## Testing: Sample PDF Flow + Real Noir Verification
+
+1. Start backend and frontend from this repository:
+   - Backend: `cd backend && npm install && cp .env.example .env && npm run start:dev`
+   - Frontend: `cd frontend && npm install && npm run dev`
+2. Open the eligibility page (`/eligibility` or `/upgrade`).
+3. Upload each sample PDF and validate:
+   - `statement_pass_high.pdf` → read-only `[2500,3100,1800]` → pass
+   - `statement_pass_borderline.pdf` → read-only `[1050,1200,1001]` → pass
+   - `statement_fail.pdf` → read-only `[1500,800,2200]` → fail message
+4. Upload an unknown PDF and verify warning + editable manual input fields.
+5. After a pass case, verify real on-chain proof status:
+
+```bash
+curl http://localhost:3000/eligibility/status \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+Check for:
+- `"verificationMethod": "onchain"`
+- `proofHash`, `stellarTxHash`, `sorobanTxHash`, and `verifiedAt` present
 
 ## Project Structure
 
