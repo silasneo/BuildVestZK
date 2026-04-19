@@ -5,7 +5,10 @@ describe('EligibilityService', () => {
 
   const prisma = {
     $transaction: jest.fn().mockResolvedValue([]),
-    user: { update: jest.fn().mockResolvedValue({}) },
+    user: {
+      update: jest.fn().mockResolvedValue({}),
+      findUnique: jest.fn(),
+    },
     eligibilityProfile: { upsert: jest.fn().mockResolvedValue({}) },
   };
 
@@ -100,6 +103,47 @@ describe('EligibilityService', () => {
     expect(verificationService.verify).toHaveBeenCalledWith('proof-hash', [
       '1000',
     ]);
+    expect(prisma.eligibilityProfile.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({
+          evaluatedAt: expect.any(Date),
+        }),
+        create: expect.objectContaining({
+          evaluatedAt: expect.any(Date),
+        }),
+      }),
+    );
+  });
+
+  it('returns evaluated timestamp as verifiedAt in eligibility status', async () => {
+    const evaluatedAt = new Date('2026-04-19T13:00:00.000Z');
+    prisma.user.findUnique.mockResolvedValue({
+      tier: 'PRIME',
+      eligibility: {
+        status: 'APPROVED',
+        qualified: true,
+        proofHash: 'proof-hash',
+        stellarTxHash: 'stellar-tx-hash',
+        stellarLedger: 12345,
+        sorobanTxHash: 'soroban-tx-hash',
+        verificationMethod: 'onchain',
+        evaluatedAt,
+      },
+    });
+
+    const result = await service.getStatus(1);
+
+    expect(result).toEqual({
+      tier: 'PRIME',
+      status: 'APPROVED',
+      qualified: true,
+      proofHash: 'proof-hash',
+      stellarTxHash: 'stellar-tx-hash',
+      stellarLedger: 12345,
+      sorobanTxHash: 'soroban-tx-hash',
+      verificationMethod: 'onchain',
+      verifiedAt: evaluatedAt,
+    });
   });
 
   it('returns null stellar fields when Stellar submission fails', async () => {
