@@ -50,10 +50,13 @@ function UpgradeToPrime() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 px-4 py-8 text-white">
-      <div className="mx-auto max-w-3xl rounded-xl border border-gray-700 bg-gray-900 p-6 shadow-lg">
-        <h1 className="text-2xl font-bold">Upgrade to PRIME Investor</h1>
-        <p className="mt-2 text-sm text-gray-300">
+    <div className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900">
+      <div className="mx-auto mb-6 flex w-full max-w-3xl justify-center">
+        <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="h-10" />
+      </div>
+      <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h1 className="text-2xl font-bold text-slate-900">Upgrade to PRIME Investor</h1>
+        <p className="mt-2 text-sm text-slate-600">
           Enter your last 3 monthly ending balances. All must be above $1,000 to qualify.
         </p>
 
@@ -61,33 +64,33 @@ function UpgradeToPrime() {
           <StatementUpload />
 
           <div className="grid gap-4 md:grid-cols-3">
-            <label className="text-sm text-gray-300">
+            <label className="text-sm text-slate-700">
               Month 1 Balance ($)
               <input
                 type="number"
                 value={month1}
                 onChange={(event) => setMonth1(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-bv-blue focus:outline-none focus:ring-2 focus:ring-bv-blue/20"
                 required
               />
             </label>
-            <label className="text-sm text-gray-300">
+            <label className="text-sm text-slate-700">
               Month 2 Balance ($)
               <input
                 type="number"
                 value={month2}
                 onChange={(event) => setMonth2(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-bv-blue focus:outline-none focus:ring-2 focus:ring-bv-blue/20"
                 required
               />
             </label>
-            <label className="text-sm text-gray-300">
+            <label className="text-sm text-slate-700">
               Month 3 Balance ($)
               <input
                 type="number"
                 value={month3}
                 onChange={(event) => setMonth3(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-bv-blue focus:outline-none focus:ring-2 focus:ring-bv-blue/20"
                 required
               />
             </label>
@@ -102,10 +105,10 @@ function UpgradeToPrime() {
           </button>
         </form>
 
-        {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
         {result?.qualified && (
-          <div className="mt-6 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-emerald-100">
+          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900">
             <p className="font-semibold">✅ Congratulations! You've been upgraded to PRIME Investor</p>
             <div className="mt-4">
               <ProofStatus
@@ -126,7 +129,7 @@ function UpgradeToPrime() {
         )}
 
         {result && !result.qualified && (
-          <div className="mt-6 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-amber-100">
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
             <p className="font-semibold">❌ Does not qualify. All 3 monthly balances must exceed $1,000.</p>
             <p className="mt-2 text-sm">Verification method: {result.verificationMethod || 'N/A'}</p>
             <button
