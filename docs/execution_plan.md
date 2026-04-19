@@ -1,11 +1,11 @@
 # 0. Current Implementation Status (Hackathon Snapshot)
 
-- [x] ✅ Backend setup complete (PR #3 merged: NestJS + Prisma + SQLite + JWT + TierRulesEngine + mock proof)
+- [x] ✅ Backend setup complete (PR #3 merged: NestJS + Prisma + SQLite + JWT + TierRulesEngine)
 - [x] ✅ Backend API testing complete (local test cases passing)
 - [x] ✅ Deployment configs complete (Railway + Vercel configured)
 - [x] ✅ Stellar testnet setup complete for account bootstrap (keypair generated + funded via Friendbot)
 - [x] ✅ Frontend overhaul complete (BuildVest-branded landing + investor dashboard)
-- [x] ✅ Noir ZK circuit implementation complete (`circuits/balance_check` + backend Noir prover integration with mock fallback)
+- [x] ✅ Noir ZK circuit implementation complete (`circuits/balance_check` + backend Noir prover integration)
 - [x] ✅ Stellar ManageData on-chain anchoring complete (PR #10)
 - [x] ✅ Soroban verifier contract scaffold added (`contracts/verifier/`) with `verify`/`is_verified` + unit tests
 - [x] ✅ Verification mode toggle added (`VERIFICATION_MODE=local|onchain`) with local/Soroban strategies and fallback
@@ -14,6 +14,20 @@
 - [x] ✅ Final polish + deploy verification complete
 
 > Soroban verifier contract deployed on Stellar testnet: `CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU`.
+>
+> ✅ Milestone update (2026-04-19): real Noir proofs now generate successfully and are verified on-chain via Soroban. Mock proof remains fallback-only.
+>
+> Real pipeline: `Noir proof (nargo 0.36.0)` → `SHA-256 proof hash` → `Stellar ManageData` → `Soroban on-chain verification`.
+
+## 0.1 ZK Version Matrix (current)
+
+| Component | Version | Status |
+|-----------|---------|--------|
+| nargo | 0.36.0 | ✅ Compiles circuit |
+| @noir-lang/noir_js | 0.36.0 | ✅ Executes witness |
+| @noir-lang/backend_barretenberg | 0.36.0 | ✅ Generates & verifies proof |
+| Soroban contract | CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU | ✅ On-chain verification |
+| Stellar network | Testnet | ✅ Proof hash anchored |
 
 # 1. Recommended Hackathon Strategy
 
@@ -22,7 +36,7 @@
 - Use **SQLite via Prisma** (no Docker) for zero-friction setup.
 - Skip real PDF parsing initially; accept structured JSON month balances and use PDFs as visual demo props.
 - Use **Noir** for ZK with a tiny circuit (3 threshold comparisons).
-- Implement proof flow in phases: **mock proof first**, then swap to real Noir proving.
+- Proof flow is now **real Noir proving by default**, with mock proof retained only as a runtime fallback.
 - Include both:
   - **Stellar ManageData anchoring**
   - **UltraHonk Soroban on-chain verifier** (promote from stretch to core demo)
@@ -197,7 +211,7 @@ export class TierRulesEngine {
 }
 ```
 
-## ProofService (mock-first, then real Noir)
+## ProofService (real Noir default, mock fallback)
 
 ```ts
 // backend/src/proof/proof.service.ts
@@ -227,11 +241,11 @@ export class ProofService {
   }
 
   async generateNoirProof(monthBalances: number[]) {
-    // Phase 2/3 integration sketch
+    // Current implementation:
     // 1) Load circuit artifacts from zk/target
     // 2) Build input map with private balances + public threshold
-    // 3) Use noir_js + barretenberg backend to generate and verify proof
-    // 4) Return serialized proof + proof hash
+    // 3) Use noir_js + barretenberg backend (0.36.0) to generate and verify proof
+    // 4) Return serialized proof + SHA-256 proof hash
     return {
       mode: 'noir',
       proof: '<serialized_proof>',
@@ -400,20 +414,16 @@ export function ProofStatus({ status, stellarTxHash, sorobanTxHash }: Props) {
 # 7. ZK Design — Noir Circuit
 
 ```noir
-fn main(
-    month1_balance: u64,  // private
-    month2_balance: u64,  // private
-    month3_balance: u64,  // private
-    threshold: pub u64,   // public (1000)
-) {
-    assert(month1_balance > threshold);
-    assert(month2_balance > threshold);
-    assert(month3_balance > threshold);
+fn main(balances: [Field; 3], threshold: Field) -> pub Field {
+    for balance_index in 0..3 {
+        assert((balances[balance_index] as u64) >= (threshold as u64));
+    }
+    threshold
 }
 ```
 
 - Private inputs: 3 actual balances (never revealed publicly)
-- Public input: threshold (`1000`)
+- Public input: threshold (`1000`) returned as public output for verifier plumbing
 - Flow: parse/collect balances off-chain → generate proof in backend → verify (Soroban on-chain preferred, off-chain fallback) → anchor proof hash with ManageData
 
 ## Architecture clarification — where Noir runs
@@ -590,7 +600,7 @@ npx ts-node scripts/reset-and-demo.ts fail
 | 3 | Auth module: signup + login (bcrypt + JWT) | 20 min | 🔴 |
 | 4 | Simple JWT guard | 5 min | 🔴 |
 | 5 | TierRulesEngine (8 lines) | 2 min | 🔴 |
-| 6 | ProofService (mock — SHA-256 hash) | 5 min | 🔴 |
+| 6 | ProofService (initial mock fallback path) | 5 min | 🔴 |
 | 7 | EligibilityController: GET /status + POST /evaluate | 15 min | 🔴 |
 | 8 | Test with curl: signup → evaluate → check DB | 5 min | 🔴 |
 | 9 | Scaffold frontend (Vite + React + Tailwind) | 5 min | — |
@@ -600,11 +610,11 @@ npx ts-node scripts/reset-and-demo.ts fail
 | 13 | Dashboard page (tier badge, status, upgrade button) | 15 min | 🔴 |
 | 14 | UpgradeToPrime page (upload visual + balance inputs + submit + result) | 20 min | 🔴 |
 | 15 | Generate test PDFs | 5 min | 🟡 |
-| 16 | Install Noir (noirup) | 3 min | 🟡 |
+| 16 | Install Noir (noirup, pin `nargo 0.36.0`) | 3 min | ✅ |
 | 17 | Write Noir circuit (3 assertions) | 5 min | 🟡 |
 | 18 | Compile circuit (nargo compile) | 2 min | 🟡 |
-| 19 | Swap ProofService to real Noir (noir_js + barretenberg) | 20 min | 🟡 |
-| 20 | Test real proof generation + verification | 10 min | 🟡 |
+| 19 | Swap ProofService to real Noir (noir_js + barretenberg) | 20 min | ✅ |
+| 20 | Test real proof generation + verification | 10 min | ✅ |
 | 21 | Generate Stellar testnet keypair + fund via friendbot | 2 min | 🟢 |
 | 22 | StellarService: ManageData tx | 10 min | 🟢 |
 | 23 | Clone + build + deploy ultrahonk_soroban_contract to Soroban testnet | 15 min | 🟢 |
@@ -624,7 +634,7 @@ npx ts-node scripts/reset-and-demo.ts fail
 | Tier check | Real (`every(b > 1000)`) | Real |
 | File upload UX | Real visual upload | Real visual upload |
 | PDF extraction | **Mocked** (manual/JSON input) | Optional lightweight parser |
-| Proof generation | Start **mock hash** | Replace with real Noir proof |
+| Proof generation | Real Noir proof (default) | Keep mock as fallback only |
 | Proof verification | Off-chain fallback allowed | **On-chain Soroban UltraHonk** |
 | Stellar anchor | Real ManageData testnet write | Real |
 | Explorer links | Real | Real |
@@ -669,7 +679,7 @@ PORT=3000
 
 Build in this order:
 
-1. Backend with mock proof (**~60 min**)
+1. Backend core + fallback path (**~60 min**)
 2. Frontend with landing page (**~75 min**)
 3. Real Noir proof (**~45 min**)
 4. Stellar ManageData + Soroban on-chain verification (**~60 min**)
