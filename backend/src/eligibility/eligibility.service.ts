@@ -26,6 +26,7 @@ export class EligibilityService {
     stellarLedger: number | null;
     sorobanTxHash: string | null;
     verificationMethod: string | null;
+    verifiedAt: Date | null;
   } | null> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -45,6 +46,7 @@ export class EligibilityService {
       stellarLedger: user.eligibility.stellarLedger,
       sorobanTxHash: user.eligibility.sorobanTxHash,
       verificationMethod: user.eligibility.verificationMethod,
+      verifiedAt: user.eligibility.evaluatedAt,
     };
   }
 
