@@ -8,10 +8,12 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:5173',
+      'https://build-vest-zk.vercel.app',
       process.env.FRONTEND_URL,
       /\.vercel\.app$/,
     ].filter(Boolean),
     credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   });
   app.useGlobalPipes(
     new ValidationPipe({
