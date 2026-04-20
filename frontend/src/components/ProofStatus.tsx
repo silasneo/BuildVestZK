@@ -12,17 +12,17 @@ function truncateHash(hash: string) {
 
 function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMethod }: ProofStatusProps) {
   return (
-    <div className="rounded-xl border border-gray-700 bg-gray-800/60 p-5 shadow-lg">
-      <h3 className="mb-4 text-lg font-semibold text-white">Proof Details</h3>
-      <div className="space-y-3 text-sm text-gray-200">
+    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-md">
+      <h3 className="mb-4 text-lg font-semibold text-gray-900">Proof Details</h3>
+      <div className="space-y-3 text-sm text-gray-700">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-400">Proof Hash</span>
+          <span className="text-gray-500">Proof Hash</span>
           {proofHash ? (
             <div className="flex items-center gap-2">
-              <code className="rounded bg-gray-900 px-2 py-1 text-xs text-bv-blue/70">{truncateHash(proofHash)}</code>
+              <code className="rounded bg-gray-100 px-2 py-1 text-xs text-blue-700">{truncateHash(proofHash)}</code>
               <button
                 type="button"
-                className="rounded bg-gray-700 px-2 py-1 text-xs font-medium hover:bg-gray-600"
+                className="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-200"
                 onClick={() => navigator.clipboard.writeText(proofHash)}
               >
                 Copy
@@ -33,13 +33,13 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
           )}
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-400">Stellar Tx</span>
+          <span className="text-gray-500">Stellar Tx</span>
           {stellarTxHash ? (
             <a
               href={`https://horizon-testnet.stellar.org/transactions/${stellarTxHash}`}
               target="_blank"
               rel="noreferrer"
-              className="text-bv-blue/70 hover:text-bv-blue/60"
+              className="text-blue-600 hover:text-blue-800"
             >
               View Transaction
             </a>
@@ -48,13 +48,13 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
           )}
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-400">Soroban Tx</span>
+          <span className="text-gray-500">Soroban Tx</span>
           {sorobanTxHash ? (
             <a
               href={`https://stellar.expert/explorer/testnet/tx/${sorobanTxHash}`}
               target="_blank"
               rel="noreferrer"
-              className="text-bv-blue/70 hover:text-bv-blue/60"
+              className="text-blue-600 hover:text-blue-800"
             >
               View Transaction
             </a>
@@ -63,8 +63,8 @@ function ProofStatus({ proofHash, stellarTxHash, sorobanTxHash, verificationMeth
           )}
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-400">Verification Method</span>
-          <span className="rounded-full bg-bv-blue/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-bv-blue/60">
+          <span className="text-gray-500">Verification Method</span>
+          <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700">
             {verificationMethod || 'N/A'}
           </span>
         </div>
