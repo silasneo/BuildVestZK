@@ -22,6 +22,13 @@ interface EligibilityStatus {
   createdAt?: string | null;
 }
 
+type SidebarNavItem = {
+  label: string;
+  href: string;
+  active: boolean;
+  disabled?: boolean;
+};
+
 function Dashboard() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<EligibilityStatus | null>(null);
@@ -74,15 +81,17 @@ function Dashboard() {
   const proofDisplay = status?.proofHash ? `${status.proofHash.slice(0, 12)}...${status.proofHash.slice(-8)}` : 'N/A';
   const verificationTimestamp = status?.verifiedAt || status?.updatedAt || status?.createdAt;
   const verificationDate = verificationTimestamp ? new Date(verificationTimestamp).toLocaleDateString() : 'N/A';
-  const navItems = [
-    { label: 'Dashboard', href: '/dashboard', active: true },
-    { label: 'Marketplace', href: '#', active: false },
-    { label: 'Portfolio', href: '#', active: false },
-    { label: 'Wallet', href: '#', active: false },
-    { label: 'Secondary Market', href: '#', active: false },
-    { label: 'Notifications', href: '#', active: false },
-    { label: 'Settings', href: '#', active: false },
+
+  const navItems: SidebarNavItem[] = [
+    { label: 'Dashboard', href: '/dashboard', active: true, disabled: false },
+    { label: 'Marketplace', href: '#', active: false, disabled: true },
+    { label: 'Portfolio', href: '#', active: false, disabled: true },
+    { label: 'Wallet', href: '#', active: false, disabled: true },
+    { label: 'Secondary Market', href: '#', active: false, disabled: true },
+    { label: 'Notifications', href: '#', active: false, disabled: true },
+    { label: 'Settings', href: '#', active: false, disabled: true },
   ];
+
   const investments = [
     { asset: 'Lagos Commercial Tower', amount: '$2,000', tokens: '120 BV-LAG', status: 'CONFIRMED', date: 'Apr 14, 2026' },
     { asset: 'Abuja Solar Farm', amount: '$1,500', tokens: '85 BV-ABJ', status: 'PENDING', date: 'Apr 09, 2026' },
@@ -102,6 +111,14 @@ function Dashboard() {
     navigate('/login');
   };
 
+  const handleSidebarNavClick = (item: SidebarNavItem) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (item.disabled) {
+      event.preventDefault();
+      return;
+    }
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <button
@@ -114,28 +131,35 @@ function Dashboard() {
       </button>
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-slate-200 bg-white p-5 transition-transform md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-slate-200 bg-white p-5 transition-transform md:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="mb-8 h-8" />
+
         <nav className="space-y-1">
           {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className={`block rounded-lg px-3 py-2 text-sm font-medium ${
+              aria-disabled={item.disabled ? 'true' : undefined}
+              tabIndex={item.disabled ? -1 : 0}
+              onClick={handleSidebarNavClick(item)}
+              className={`block rounded-lg px-3 py-2 text-sm ${
                 item.active
-                  ? 'bg-bv-blue/5 text-bv-blue'
-                  : 'text-slate-600 transition hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-bv-blue/5 font-medium text-bv-blue'
+                  : item.disabled
+                    ? 'cursor-not-allowed select-none text-slate-400 italic'
+                    : 'font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900'
               }`}
-              onClick={() => setSidebarOpen(false)}
             >
               {item.label}
             </a>
           ))}
         </nav>
+
         <div className="my-4 border-t border-slate-200" />
+
         <nav className="space-y-1">
           <a
             href="/eligibility"
@@ -156,7 +180,9 @@ function Dashboard() {
             Stellar Explorer
           </a>
         </nav>
+
         <div className="my-4 border-t border-slate-200" />
+
         <button
           type="button"
           className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50"
@@ -164,6 +190,11 @@ function Dashboard() {
         >
           Logout
         </button>
+
+        {/* Footnote */}
+        <p className="mt-4 text-xs leading-relaxed text-slate-400">
+          This is a BuildVest ZK Privacy demo. Others links and sections are available in the full BuildVest application.
+        </p>
       </aside>
 
       <main className="md:pl-72">
@@ -199,7 +230,7 @@ function Dashboard() {
                   UNVERIFIED
                 </span>
                 <h2 className="mt-3 text-2xl font-bold">Verification Pending</h2>
-                <p className="mt-2 text-slate-600">Verify Eligibility →</p>
+                <p className="mt-2 text-slate-600">Verify Eligibility ���</p>
                 <a
                   href="/eligibility"
                   className="mt-4 inline-flex rounded-lg bg-bv-blue px-4 py-2 text-sm font-semibold text-white hover:bg-bv-blue/90"
