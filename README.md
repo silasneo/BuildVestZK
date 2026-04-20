@@ -189,8 +189,15 @@ No `/api/v1` prefix:
 
 - `POST /auth/signup`
 - `POST /auth/login`
+- `GET /api/health` (public healthcheck endpoint, no auth)
 - `GET /eligibility/status`
 - `POST /eligibility/evaluate`
+
+For Railway (or any deployer), set the healthcheck path to:
+
+- `/api/health` ✅
+
+Do **not** use `/eligibility/status` as a healthcheck path because it requires JWT auth.
 
 When proofs succeed end-to-end with Soroban verification, API responses show:
 
