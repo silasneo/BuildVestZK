@@ -135,7 +135,7 @@ function Dashboard() {
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="mb-8 h-8" />
+        <img src="https://buildvest.net/buildvest-logo.png" alt="BuildVest" className="h-8" />
 
         <nav className="space-y-1">
           {navItems.map((item) => (
