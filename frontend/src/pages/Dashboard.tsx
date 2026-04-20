@@ -193,7 +193,7 @@ function Dashboard() {
 
         {/* Footnote */}
         <p className="mt-4 text-xs leading-relaxed text-slate-400">
-          This is a BuildVest ZK Privacy demo. Others links and sections are available in the full BuildVest application.
+          This is a BuildVest ZK Privacy demo. Other links and sections are available in the full BuildVest application.
         </p>
       </aside>
 
