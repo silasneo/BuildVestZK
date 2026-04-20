@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { EligibilityModule } from './eligibility/eligibility.module';
+import { HealthController } from './health.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { VerificationModule } from './verification/verification.module';
 
@@ -13,5 +14,6 @@ import { VerificationModule } from './verification/verification.module';
     EligibilityModule,
     VerificationModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}

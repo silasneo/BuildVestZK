@@ -18,4 +18,11 @@ describe('AppController (e2e)', () => {
   it('/ (GET) should be 404', () => {
     return request(app.getHttpServer()).get('/').expect(404);
   });
+
+  it('/api/health (GET) should return ok', () => {
+    return request(app.getHttpServer())
+      .get('/api/health')
+      .expect(200)
+      .expect({ status: 'ok' });
+  });
 });
