@@ -52,13 +52,11 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
       <div className="w-full max-w-md">
         {/* Centered logo */}
         <div className="mb-6 flex justify-center">
-          <Link to="/">
           <img
             src="https://buildvest.net/buildvest-logo.png"
             alt="BuildVest"
             className="h-10"
           />
-        </Link>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
