@@ -1,46 +1,88 @@
-# BuildVestZK
+# 🚀 BuildVestZK
 
-BuildVestZK is a ZK-powered investor eligibility verification system for the BuildVest platform.
+**BuildVestZK** is a ZK-powered investor eligibility verification system for the BuildVest platform.
 
-## Status
+It enables **privacy-first investor qualification** — proving that users meet financial requirements **without exposing sensitive data**.
+
+🔗 Live App: https://build-vest-zk.vercel.app/  
+📄 Pitch Deck: https://github.com/silasneo/BuildVestZK/blob/main/docs/BuildVest_Privacy-First_Fractional_RealAssets-Deck.pdf  
+
+---
+
+## 🌍 BuildVest Background
+
+BuildVest is a fractional investment platform enabling people to invest in **well-titled, income-producing real-world assets** across emerging markets — starting from **$100 (₦150k)**.
+
+High-yield assets exist globally, especially in emerging markets, but remain largely inaccessible due to:
+
+- High minimums  
+- Low trust  
+- Weak governance  
+- Limited access for global & diaspora investors  
+
+This creates a paradox:
+
+> **Trillions in assets. Billions in demand. Almost no trusted rails.**
+
+### The Missing Layer
+
+Tokenization alone is not enough.
+
+The real bottleneck is:
+
+> **How do you verify investors without exposing their private financial data?**
+
+Traditional KYC exposes sensitive information.  
+BuildVestZK introduces a **privacy-preserving trust layer**.
+
+---
+
+## 🔐 What BuildVestZK Does
+
+BuildVestZK uses **Zero-Knowledge Proofs (ZK)** to allow users to:
+
+- ✅ Prove eligibility  
+- ❌ Without revealing underlying financial data  
+
+### 🧠 Non-Technical Intuition
+
+> “I can prove I meet the requirement — without showing you my actual numbers.”
+
+Example rule (used in this demo):
+
+- Maintain **balance > $1,000 for 3 months**
+
+The system verifies this condition **without ever seeing the balances themselves**.
+
+---
+
+## ⚙️ Status
 
 All core features are complete and merged ✅
 
-1. ✅ Real Noir ZK circuit proof generation is working by default (mock proof remains as fallback only)
+1. ✅ Real Noir ZK circuit proof generation (default)
 2. ✅ Stellar ManageData anchoring of proof hash
 3. ✅ Soroban verifier contract deployed on Stellar testnet  
    `CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU`
-4. ✅ Verification mode toggle (`local` / `onchain`) with fallback
-5. ✅ `symbol_short!("verified")` fix in verifier contract
-6. ✅ Demo/reset scripts (`demo`, `demo:reset`, `demo:full`)
-7. ✅ BuildVest-branded frontend (landing + dashboard)
-8. ✅ Deterministic sample PDF demo flow (known PDFs auto-populate balances, unknown PDFs allow manual entry)
-9. ✅ Eligibility page redesign (light background, BuildVest branding, blue actions, green upload success state)
+4. ✅ Verification mode toggle (`local` / `onchain`)
+5. ✅ Local fallback logic
+6. ✅ Demo/reset scripts
+7. ✅ BuildVest-branded frontend
+8. ✅ Deterministic PDF demo flow
+9. ✅ Eligibility UX redesign
 
-## Tech Stack
+---
 
-- **ZK:** Noir + Barretenberg (real proof flow enabled by default)
-- **Blockchain:** Stellar testnet (ManageData) + Soroban verifier contract
-- **Backend:** NestJS + TypeScript + Prisma + SQLite + JWT
-- **Frontend:** React + Vite + Tailwind CSS
+## 🏗️ Tech Stack
 
-### ZK version alignment (working)
+- **ZK:** Noir + Barretenberg  
+- **Blockchain:** Stellar (ManageData + Soroban contract)  
+- **Backend:** NestJS + TypeScript + Prisma + SQLite + JWT  
+- **Frontend:** React + Vite + Tailwind CSS  
 
-| Component | Version | Status |
-|-----------|---------|--------|
-| nargo | 0.36.0 | ✅ Compiles circuit |
-| @noir-lang/noir_js | 0.36.0 | ✅ Executes witness |
-| @noir-lang/backend_barretenberg | 0.36.0 | ✅ Generates & verifies proof |
-| Soroban contract | CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU | ✅ On-chain verification |
-| Stellar network | Testnet | ✅ Proof hash anchored |
+---
 
-## Brand Assets
-
-- **Logo:** `https://buildvest.net/buildvest-logo.png`
-- **Primary Blue:** `#017EFE`
-- **Primary Green:** `#03A504`
-
-## Architecture Flow
+## 🔁 Architecture Flow
 
 ```mermaid
 flowchart LR
@@ -57,76 +99,115 @@ flowchart LR
   H --> I[Persist profile + PRIME status + explorer links]
 ```
 
-## Verified Real Proof Pipeline
+---
+
+## 🔗 Verified Real Proof Pipeline
 
 ```text
-Real Noir circuit proof (nargo 0.36.0) → SHA-256 proof hash → Stellar ManageData tx → Soroban on-chain verification ✅
+Real Noir circuit proof (nargo 0.36.0)
+→ SHA-256 proof hash
+→ Stellar ManageData transaction
+→ Soroban on-chain verification
+→ PRIME investor status ✅
 ```
 
-## Sample PDF Demo Flow
+---
 
-Known sample PDFs in `frontend/public/samples/`:
+## 🧪 Demo / Test Guide (For Judges & Investors)
+
+### Step 1 — Open the App
+
+👉 https://build-vest-zk.vercel.app/
+
+---
+
+### Step 2 — Navigate to Eligibility
+
+Go to:
+```
+/eligibility or /upgrade
+```
+
+---
+
+### Step 3 — Upload Sample PDF
+
+Use provided demo files:
+
+| File | Result |
+|------|--------|
+| `statement_pass_high.pdf` | ✅ PRIME |
+| `statement_pass_borderline.pdf` | ✅ PRIME |
+| `statement_fail.pdf` | ❌ RETAIL |
+
+---
+
+### Step 4 — Observe
+
+- PDF upload required before evaluation  
+- Known PDFs auto-fill balances  
+- Unknown PDFs allow manual input  
+- Pass → ZK proof + on-chain verification  
+- Fail → clear rejection  
+
+---
+
+### Step 5 — Verify On-Chain
+
+```bash
+curl http://localhost:3000/eligibility/status   -H "Authorization: Bearer <TOKEN>"
+```
+
+Check:
+
+- `"verificationMethod": "onchain"`
+- `proofHash`
+- `stellarTxHash`
+- `sorobanTxHash`
+
+---
+
+## 🧾 Sample PDF Demo Flow
 
 | File | Balances | Result |
 |------|----------|--------|
-| `statement_pass_high.pdf` | `[2500, 3100, 1800]` | ✅ All > $1,000 → PRIME upgrade |
-| `statement_pass_borderline.pdf` | `[1050, 1200, 1001]` | ✅ Barely passes → PRIME upgrade |
-| `statement_fail.pdf` | `[1500, 800, 2200]` | ❌ Month 2 < $1,000 → Rejected |
+| statement_pass_high.pdf | [2500, 3100, 1800] | ✅ PRIME |
+| statement_pass_borderline.pdf | [1050, 1200, 1001] | ✅ PRIME |
+| statement_fail.pdf | [1500, 800, 2200] | ❌ FAIL |
 
-Behavior:
-- PDF upload is required (Evaluate button remains disabled until upload)
-- Known PDF → balances auto-populate as read-only inputs
-- Unknown PDF → warning shown + editable balances for manual test input
-- Pass → Noir proof + Soroban verification + PRIME upgrade
-- Fail → `Does not qualify. All 3 monthly balances must exceed $1,000.` + `Return to Dashboard`
+---
 
-## Eligibility Page Redesign
+## 🔧 ZK Version Alignment
 
-- Light background and dark text inputs
-- BuildVest branding with logo/header above the upgrade card
-- Blue action buttons (`Choose PDF`, `Evaluate Eligibility`)
-- Green checkmark confirmation after successful PDF upload
-- Sample PDFs are downloadable directly from the eligibility page
+| Component | Version | Status |
+|----------|--------|--------|
+| nargo | 0.36.0 | ✅ |
+| noir_js | 0.36.0 | ✅ |
+| barretenberg | 0.36.0 | ✅ |
+| Soroban | Testnet | ✅ |
 
-## Deployed Contract & Explorer Links
+---
 
-- **Soroban Contract (testnet):**  
+## 📡 Deployed Contracts
+
+- Contract:  
   `CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU`
-- **Contract page (Stellar Lab):**  
+
+- Explorer:  
   https://lab.stellar.org/r/testnet/contract/CA4YMOKFTLL53SHLND6YVLLKTO6XEYHLTPZF4SZLQX6YINMFF7LSQBLU
-- **Deploy tx (Explorer):**  
-  https://stellar.expert/explorer/testnet/tx/4e33bf5ac21cc0d2aaae729159f5008b35a0226bed2be7624aedaac6a48bda0a
-- **WASM upload tx (Explorer):**  
-  https://stellar.expert/explorer/testnet/tx/4e90cefa88601c396f04d46a26a345885c0b24e2473e3e3a80315f95a35aa00c
 
-## Getting Started
+---
 
-### 0) Noir toolchain (required for real proof generation)
+## 🛠️ Getting Started
 
-Use matching 0.36.0 versions:
+### Noir
 
 ```bash
-# nargo (Noir CLI)
 noirup -v 0.36.0
-nargo --version
-
-# backend npm packages
-cd backend
-npm install
-npm ls @noir-lang/noir_js @noir-lang/backend_barretenberg
-
-# compile Noir circuit artifact
-cd ../circuits/balance_check
 nargo compile
 ```
 
-Circuit entrypoint syntax for `nargo 0.36.0`:
-
-```noir
-fn main(balances: [Field; 3], threshold: Field) -> pub Field
-```
-
-### 1) Backend
+### Backend
 
 ```bash
 cd backend
@@ -135,9 +216,7 @@ cp .env.example .env
 npm run start:dev
 ```
 
-Backend: `http://localhost:3000`
-
-### 2) Frontend
+### Frontend
 
 ```bash
 cd frontend
@@ -145,118 +224,46 @@ npm install
 npm run dev
 ```
 
-Frontend: `http://localhost:5173`
+---
 
-### 3) Soroban verifier contract (optional local build/deploy)
+## 🔌 API Endpoints
 
-```bash
-export STELLAR_SECRET_KEY="S..."
-./scripts/deploy-verifier.sh
-```
+- POST /auth/signup  
+- POST /auth/login  
+- GET /api/health  
+- GET /eligibility/status  
+- POST /eligibility/evaluate  
 
-## Demo Commands
+---
 
-Run with backend active:
+## 🎯 Why This Matters
 
-```bash
-cd backend
-npm run demo:full
-```
+BuildVestZK enables:
 
-Also available:
+- Privacy-first compliance  
+- Global investor onboarding  
+- Trust without exposing data  
+- Scalable verification for real-world assets  
 
-- `npm run demo` — run pass/fail demo flow
-- `npm run demo:reset` — reset local demo database
+---
 
-## Environment Variables
+## 🔭 Roadmap
 
-From `backend/.env.example`:
+- ✅ ZK prototype complete  
+- 🔜 Full BuildVest integration  
+- 🔜 Multi-rule verification  
+- 🔜 Full tokenization + privacy layer  
 
-- `DATABASE_URL` — Prisma database URL
-- `JWT_SECRET` — JWT signing secret
-- `STELLAR_SECRET_KEY` — Stellar account secret (`S...`)
-- `STELLAR_NETWORK` — `testnet` or `public`
-- `STELLAR_HORIZON_URL` — Horizon endpoint
-- `SOROBAN_RPC_URL` — Soroban RPC endpoint
-- `SOROBAN_VERIFIER_CONTRACT_ID` — deployed verifier contract ID
-- `VERIFICATION_MODE` — `local` or `onchain` (with local fallback)
-- `FRONTEND_URL` — allowed frontend origin
-- `PORT` — backend port
+---
 
-## API Endpoints
+## 🌐 Vision
 
-No `/api/v1` prefix:
+> Become the default platform for fractional ownership of emerging-market real assets — powered by privacy, trust, and programmable finance.
 
-- `POST /auth/signup`
-- `POST /auth/login`
-- `GET /api/health` (public healthcheck endpoint, no auth)
-- `GET /eligibility/status`
-- `POST /eligibility/evaluate`
+---
 
-For Railway (or any deployer), set the healthcheck path to:
+## 🤝 Contact
 
-- `/api/health` ✅
-
-Do **not** use `/eligibility/status` as a healthcheck path because it requires JWT auth.
-
-When proofs succeed end-to-end with Soroban verification, API responses show:
-
-```json
-{
-  "tier": "PRIME",
-  "status": "APPROVED",
-  "qualified": true,
-  "proofHash": "9bc46abc7bc1ac6304cfe6774cf5507e268587aa76fb38fc13040946981bf86b",
-  "stellarTxHash": "51a1e26161837ba375c07226897f84d81c087d36b280d78e044b7239b8366636",
-  "stellarLedger": 2121931,
-  "sorobanTxHash": "3d3f6a91be5cfb84fff16c123723c8c4198b164a5e2149f70a61360891c03132",
-  "verificationMethod": "onchain",
-  "verifiedAt": "2026-04-19T16:06:20.934Z"
-}
-```
-
-## Testing: Sample PDF Flow + Real Noir Verification
-
-1. Start backend and frontend from this repository:
-   - Backend: `cd backend && npm install && cp .env.example .env && npm run start:dev`
-   - Frontend: `cd frontend && npm install && npm run dev`
-2. Open the eligibility page (`/eligibility` or `/upgrade`).
-3. Upload each sample PDF and validate:
-   - `statement_pass_high.pdf` → read-only `[2500,3100,1800]` → pass
-   - `statement_pass_borderline.pdf` → read-only `[1050,1200,1001]` → pass
-   - `statement_fail.pdf` → read-only `[1500,800,2200]` → fail message
-4. Upload an unknown PDF and verify warning + editable manual input fields.
-5. After a pass case, verify real on-chain proof status:
-
-```bash
-curl http://localhost:3000/eligibility/status \
-  -H "Authorization: Bearer <TOKEN>"
-```
-
-Check for:
-- `"verificationMethod": "onchain"`
-- `proofHash`, `stellarTxHash`, `sorobanTxHash`, and `verifiedAt` present
-
-## Project Structure
-
-```text
-BuildVestZK/
-├── backend/                 # NestJS API + proof orchestration
-├── frontend/                # React/Tailwind BuildVest UI
-├── contracts/verifier/      # Soroban verifier contract
-├── circuits/balance_check/  # Noir ZK circuit
-├── scripts/
-│   ├── demo.ts
-│   ├── reset.ts
-│   └── deploy-verifier.sh
-└── docs/
-    ├── execution_plan.md
-    ├── DEPLOYMENT.md
-    └── backend_testing.md
-```
-
-## Documentation
-
-- Execution plan/status: [`docs/execution_plan.md`](docs/execution_plan.md)
-- Deployment: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
-- Backend testing: [`docs/backend_testing.md`](docs/backend_testing.md)
+Silas Okwoche  
+silas@buildvest.net  
+Lagos, Nigeria | Global  
