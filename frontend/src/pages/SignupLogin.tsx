@@ -48,66 +48,89 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-950 px-4">
-      <div className="w-full max-w-md rounded-xl border border-gray-700 bg-gray-900 p-8 shadow-lg">
-        <div className="mb-6 flex rounded-lg bg-gray-800 p-1">
-          <button
-            type="button"
-            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
-              mode === 'signup' ? 'bg-bv-blue text-white' : 'text-gray-300'
-            }`}
-            onClick={() => setMode('signup')}
-          >
-            Sign Up
-          </button>
-          <button
-            type="button"
-            className={`flex-1 rounded-md px-4 py-2 text-sm font-semibold ${
-              mode === 'login' ? 'bg-bv-blue text-white' : 'text-gray-300'
-            }`}
-            onClick={() => setMode('login')}
-          >
-            Log In
-          </button>
+    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10 text-slate-900">
+      <div className="w-full max-w-md">
+        {/* Centered logo */}
+        <div className="mb-6 flex justify-center">
+          <Link to="/">
+          <img
+            src="https://buildvest.net/buildvest-logo.png"
+            alt="BuildVest"
+            className="h-10"
+          />
+        </Link>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm text-gray-300" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
-              required
-            />
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="mb-6 flex rounded-xl bg-slate-100 p-1">
+            <button
+              type="button"
+              className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                mode === 'signup'
+                  ? 'bg-bv-blue text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              onClick={() => setMode('signup')}
+            >
+              Sign Up
+            </button>
+            <button
+              type="button"
+              className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                mode === 'login'
+                  ? 'bg-bv-blue text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+              onClick={() => setMode('login')}
+            >
+              Log In
+            </button>
           </div>
-          <div>
-            <label className="mb-1 block text-sm text-gray-300" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-lg border border-gray-600 bg-gray-800 px-3 py-2 text-white focus:border-bv-blue focus:outline-none"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-bv-blue px-4 py-2 font-semibold text-white transition hover:bg-bv-blue/90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? 'Please wait...' : mode === 'signup' ? 'Create Account' : 'Log In'}
-          </button>
-        </form>
 
-        {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-bv-blue focus:outline-none focus:ring-2 focus:ring-bv-blue/20"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="password">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-bv-blue focus:outline-none focus:ring-2 focus:ring-bv-blue/20"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-bv-blue px-4 py-2 font-semibold text-white transition hover:bg-bv-blue/90 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loading ? 'Please wait...' : mode === 'signup' ? 'Create Account' : 'Log In'}
+            </button>
+          </form>
+
+          {error && (
+            <p className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              {error}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
