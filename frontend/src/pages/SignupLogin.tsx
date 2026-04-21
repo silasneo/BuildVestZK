@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login, signup } from '../lib/api';
 
 type Mode = 'signup' | 'login';
@@ -52,11 +52,17 @@ function SignupLogin({ initialMode = 'signup' }: SignupLoginProps) {
       <div className="w-full max-w-md">
         {/* Centered logo */}
         <div className="mb-6 flex justify-center">
-          <img
-            src="https://buildvest.net/buildvest-logo.png"
-            alt="BuildVest"
-            className="h-10"
-          />
+          <Link
+            to="/"
+            className="inline-flex rounded-lg focus:outline-none focus:ring-2 focus:ring-bv-blue/30"
+            aria-label="Go to home"
+          >
+            <img
+              src="https://buildvest.net/buildvest-logo.png"
+              alt="BuildVest"
+              className="h-10"
+            />
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
